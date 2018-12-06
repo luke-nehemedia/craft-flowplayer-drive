@@ -1,0 +1,26 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Craft Flowplayer Drive plugin for Craft CMS
+ *
+ * VideoField Field Settings
+ *
+ * @author    Lucas Bares
+ * @copyright Copyright (c) 2018 Lucas Bares
+ * @link      http://luke.nehemedia.de
+ * @package   CraftFlowplayerDrive
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("lucasbares\\craftflowplayerdrive\\assetbundles\\craftflowplayerdrive\\CraftFlowplayerDriveAsset") %}
+
+{{ forms.textField({
+    label: 'Some Attribute',
+    instructions: 'Enter some attribute here.',
+    id: 'someAttribute',
+    name: 'someAttribute',
+    value: field['someAttribute']})
+}}

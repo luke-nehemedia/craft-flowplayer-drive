@@ -1,0 +1,46 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Craft Flowplayer Drive plugin for Craft CMS 3.x
+ *
+ * Craft Flowplayer Drive Settings.twig
+ *
+ * @author    Lucas Bares
+ * @copyright Copyright (c) 2018 Lucas Bares
+ * @link      http://luke.nehemedia.de
+ * @package   CraftFlowplayerDrive
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("lucasbares\\craftflowplayerdrive\\assetbundles\\craftflowplayerdrive\\CraftFlowplayerDriveAsset") %}
+
+{{ forms.textField({
+	first: true,
+    label: 'setting-siteId-label'|t('craft-flowplayerdrive'),
+    instructions: 'setting-siteId-instructions'|t('craft-flowplayerdrive'),
+    id: 'siteId',
+    name: 'siteId',
+    value: settings.siteId})
+}}
+
+{{ forms.textField({
+	first: true,
+    label: 'setting-apiKey-label'|t('craft-flowplayerdrive'),
+    instructions: 'setting-apiKey-instructions'|t('craft-flowplayerdrive'),
+    id: 'apiKey',
+    name: 'apiKey',
+    value: settings.apiKey})
+}}
+
+
+{{ forms.textField({
+	first: true,
+    label: 'setting-userId-label'|t('craft-flowplayerdrive'),
+    instructions: 'setting-userId-instructions'|t('craft-flowplayerdrive'),
+    id: 'userId',
+    name: 'userId',
+    value: settings.userId})
+}}
