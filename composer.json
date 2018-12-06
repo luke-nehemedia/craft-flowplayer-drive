@@ -1,0 +1,43 @@
+{
+    "name": "lucasbares/craft-flowplayer-drive",
+    "description": "This plugin includes Flowplayer Drive into craftcms.",
+    "type": "craft-plugin",
+    "version": "0.0.1",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "craft flowplayer drive"
+    ],
+    "support": {
+        "docs": "https://github.com/luke-nehemedia/craft-flowplayer-drive/blob/master/README.md",
+        "issues": "https://github.com/luke-nehemedia/craft-flowplayer-drive/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lucas Bares",
+            "homepage": "http://luke.nehemedia.de"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+          "lucasbares\\craftflowplayerdrive\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Craft Flowplayer Drive",
+        "handle": "craft-flowplayer-drive",
+        "hasCpSettings": true,
+        "hasCpSection": false,
+        "changelogUrl": "https://raw.githubusercontent.com/luke-nehemedia/craft-flowplayer-drive/master/CHANGELOG.md",
+        "components": {
+            "craftFlowplayerDriveService": "lucasbares\\craftflowplayerdrive\\services\\CraftFlowplayerDriveService"
+        },
+        "class": "lucasbares\\craftflowplayerdrive\\CraftFlowplayerDrive"
+    }
+}
