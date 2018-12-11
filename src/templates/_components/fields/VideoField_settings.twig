@@ -17,10 +17,11 @@
 
 {% do view.registerAssetBundle("lucasbares\\craftflowplayerdrive\\assetbundles\\craftflowplayerdrive\\CraftFlowplayerDriveAsset") %}
 
-{{ forms.textField({
-    label: 'Some Attribute',
-    instructions: 'Enter some attribute here.',
-    id: 'someAttribute',
-    name: 'someAttribute',
-    value: field['someAttribute']})
+<h2>Nur veröffentlichte Videos anzeigen</h2>
+{{ forms.lightswitch({
+    label: 'Nur veröffentlichte Videos',
+    instructions: 'Zeige nur veröffentlichte Videos an.',
+    id: 'published',
+    name: 'published',
+    value: field['published']})
 }}

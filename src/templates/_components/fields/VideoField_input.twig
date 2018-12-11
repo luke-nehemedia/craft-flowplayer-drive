@@ -15,10 +15,12 @@
 
 {% import "_includes/forms" as forms %}
 
-{{ forms.textField({
-        label: 'Some Field',
-        instructions: 'Enter some text here.',
+{{ forms.lightswitch ({
+        label: 'Published Videos',
+        instructions: 'Show only published videos',
         id: name,
         name: name,
         value: value})
 }}
+
+<a href="#" onclick="javascript:Craft.createElementSelectorModal('Videofield')">Video auswählen</a>

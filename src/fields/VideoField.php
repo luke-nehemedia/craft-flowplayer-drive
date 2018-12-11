@@ -41,9 +41,9 @@ class VideoField extends Field
     /**
      * Some attribute
      *
-     * @var string
+     * @var boolean
      */
-    public $someAttribute = 'Some Default';
+    public $published = true;
 
     // Static Methods
     // =========================================================================
@@ -75,8 +75,8 @@ class VideoField extends Field
     {
         $rules = parent::rules();
         $rules = array_merge($rules, [
-            ['someAttribute', 'string'],
-            ['someAttribute', 'default', 'value' => 'Some Default'],
+            ['published', 'boolean'],
+            ['published', 'default', 'value' => true],
         ]);
         return $rules;
     }
@@ -94,7 +94,7 @@ class VideoField extends Field
      */
     public function getContentColumnType(): string
     {
-        return Schema::TYPE_STRING;
+        return Schema::TYPE_INTEGER;
     }
 
     /**
