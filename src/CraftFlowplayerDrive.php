@@ -113,6 +113,10 @@ class CraftFlowplayerDrive extends Plugin
             }
         );
 
+        $this->setComponents([
+            'flowplayerDrive' => CraftFlowplayerDriveServiceService::class,
+        ]);
+
         // Do something after we're installed
         Event::on(
             Plugins::class,

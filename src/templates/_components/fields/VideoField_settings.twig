@@ -17,11 +17,40 @@
 
 {% do view.registerAssetBundle("lucasbares\\craftflowplayerdrive\\assetbundles\\craftflowplayerdrive\\CraftFlowplayerDriveAsset") %}
 
-<h2>Nur veröffentlichte Videos anzeigen</h2>
+<h2>Videofeld Optionen</h2>
+
+<h4>Nur veröffentlichte Videos anzeigen</h4>
+<p>Zeige nur veröffentlichte Videos an.</p>
 {{ forms.lightswitch({
     label: 'Nur veröffentlichte Videos',
     instructions: 'Zeige nur veröffentlichte Videos an.',
     id: 'published',
     name: 'published',
-    value: field['published']})
+	on: field['published']})
 }}
+
+{%- if field.getErrors('published') %}
+    <ul class="errors">
+        {% for error in field.getErrors('published') %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{%- endif %}
+
+<h4>Begrenzung</h4>
+<p><label>Die Anzahl der auswählbaren Videos begrenzen.</label></p>
+{{ forms.text({
+    label: 'Begrenzung',
+    instructions: 'Die Anzahl der auswählbaren Videos begrenzen.',
+    id: 'limit',
+    name: 'limit',
+    size: 3,
+    value: field['limit']})
+}}
+{%- if field.getErrors('limit') %}
+    <ul class="errors">
+        {% for error in field.getErrors('limit') %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{%- endif %}

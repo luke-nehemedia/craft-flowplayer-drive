@@ -12,6 +12,7 @@ namespace lucasbares\craftflowplayerdrive\fields;
 
 use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 use lucasbares\craftflowplayerdrive\assetbundles\videofieldfield\VideoFieldFieldAsset;
+use lucasbares\craftflowplayerdrive\elements\FlowplayerDriveVideoElement;
 
 use Craft;
 use craft\base\ElementInterface;
@@ -19,6 +20,8 @@ use craft\base\Field;
 use craft\helpers\Db;
 use yii\db\Schema;
 use craft\helpers\Json;
+
+
 
 /**
  * VideoField Field
@@ -39,11 +42,18 @@ class VideoField extends Field
     // =========================================================================
 
     /**
-     * Some attribute
+     * Option that only published videos will be listed
      *
      * @var boolean
      */
     public $published = true;
+
+    /**
+     * Option to limit the number of selectable videos
+     *
+     * @var boolean
+     */
+    public $limit = 1;
 
     // Static Methods
     // =========================================================================
@@ -76,7 +86,9 @@ class VideoField extends Field
         $rules = parent::rules();
         $rules = array_merge($rules, [
             ['published', 'boolean'],
-            ['published', 'default', 'value' => true],
+            ['published', 'default', 'value' => 0],
+            ['limit','integer'],
+            ['limit', 'default', 'value' => 1]
         ]);
         return $rules;
     }
@@ -94,8 +106,11 @@ class VideoField extends Field
      */
     public function getContentColumnType(): string
     {
-        return Schema::TYPE_INTEGER;
+        return Schema::TYPE_MIXED;
     }
+
+    
+    
 
     /**
      * Normalizes the field’s value for use.
@@ -227,6 +242,8 @@ class VideoField extends Field
      */
     public function getSettingsHtml()
     {
+
+
         // Render the settings template
         return Craft::$app->getView()->renderTemplate(
             'craft-flowplayer-drive/_components/fields/VideoField_settings',
@@ -335,8 +352,10 @@ class VideoField extends Field
      */
     public function getInputHtml($value, ElementInterface $element = null): string
     {
+
         // Register our asset bundle
         Craft::$app->getView()->registerAssetBundle(VideoFieldFieldAsset::class);
+
 
         // Get our id and namespace
         $id = Craft::$app->getView()->formatInputId($this->handle);
@@ -348,6 +367,8 @@ class VideoField extends Field
             'name' => $this->handle,
             'namespace' => $namespacedId,
             'prefix' => Craft::$app->getView()->namespaceInputId(''),
+            'videos' => CraftFlowplayerDrive::getInstance()->flowplayerDrive->listVideos(),
+            'value' => $value,
             ];
         $jsonVars = Json::encode($jsonVars);
         Craft::$app->getView()->registerJs("$('#{$namespacedId}-field').CraftFlowplayerDriveVideoField(" . $jsonVars . ");");
@@ -360,7 +381,10 @@ class VideoField extends Field
                 'value' => $value,
                 'field' => $this,
                 'id' => $id,
+                'limit' => $this->limit,
                 'namespacedId' => $namespacedId,
+                'videoElements' => CraftFlowplayerDrive::getInstance()->flowplayerDrive->listVideoElements(),
+                'selectedVideos' => CraftFlowplayerDrive::getInstance()->flowplayerDrive->getVideosByIds($value),
             ]
         );
     }

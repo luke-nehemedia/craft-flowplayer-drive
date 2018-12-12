@@ -52,4 +52,9 @@
         });
     };
 
+
 })( jQuery, window, document );
+
+function openVideoSelectModal(id){
+        var modal = new Garnish.Modal($('#fields-'+id),{autoShow: true, draggable: true}); //create a new modal
+    }

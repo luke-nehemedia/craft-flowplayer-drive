@@ -71,7 +71,7 @@ class Settings extends Model
     public function rules()
     {
         return [
-            [['siteId', 'apiKey','userId'], 'string', 'length' => 35],
+            [['siteId', 'apiKey','userId'], 'string'],
             [['siteId', 'apiKey'], 'required'],
         ];
     }

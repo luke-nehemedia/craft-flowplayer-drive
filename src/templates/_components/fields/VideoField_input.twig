@@ -15,12 +15,5 @@
 
 {% import "_includes/forms" as forms %}
 
-{{ forms.lightswitch ({
-        label: 'Published Videos',
-        instructions: 'Show only published videos',
-        id: name,
-        name: name,
-        value: value})
-}}
 
-<a href="#" onclick="javascript:Craft.createElementSelectorModal('Videofield')">Video auswählen</a>
+{% include '_includes/forms/elementSelect2' with {elements: selectedVideos, elementType: 'lucasbares\\craftflowplayerdrive\\elements\\FlowplayerDriveVideoElement', showStatusMenu: 'auto', disabledElementIds: [], name: name, limit: limit } %}
