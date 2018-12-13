@@ -48,6 +48,7 @@ class FlowplayerDriveVideoElement extends Element
     }
 
     public function fill($attributes){
+        // fill from storage or cache?
         $this->id = $attributes->id;
         $this->name = $attributes->name;
         $this->likes = $attributes->likes;
@@ -69,20 +70,20 @@ class FlowplayerDriveVideoElement extends Element
 	        [
 	            'key' => '*',
 	            'label' => 'Alle Videos',
-	            'criteria' => ''
+	            'criteria' => []
 	        ],
 	        [
 	            'key' => 'public',
 	            'label' => 'Öffentlich',
 	            'criteria' => [
-	                'currency' => 'cad',
+	                'published' => true,
 	            ]
 	        ],
 	        [
 	            'key' => 'private',
 	            'label' => 'Privat',
 	            'criteria' => [
-	                'currency' => 'usd',
+	                'published' => false,
 	            ]
 	        ],
 	    ];
