@@ -106,11 +106,11 @@ class VideoField extends Field
      */
     public function getContentColumnType(): string
     {
-        return Schema::TYPE_MIXED;
+        return Schema::TYPE_TEXT;
     }
 
     
-    
+
 
     /**
      * Normalizes the field’s value for use.
@@ -127,6 +127,20 @@ class VideoField extends Field
      */
     public function normalizeValue($value, ElementInterface $element = null)
     {
+        // Case 1: Save! Create VideoElements from the transmitted ids and return an encoded array with the objects
+        if(is_array($value)){
+            $videolist = [];
+            foreach ($value as $video) {
+                $videolist[] = FlowplayerDriveVideoElement::createById($video);
+            }
+            $value = json_encode($videolist);
+
+        // Case 1: Recall! Decode the json-array and return it
+        }else{
+            $value = json_decode($value);
+
+        }
+
         return $value;
     }
 

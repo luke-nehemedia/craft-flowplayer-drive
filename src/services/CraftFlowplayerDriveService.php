@@ -77,7 +77,7 @@ class CraftFlowplayerDriveService extends Component
 	}
 
 	public function listVideoElements($page = 1){
-		$uri = 'https://api.flowplayer.com/ovp/web/video/v2/site/'.$this->settings->siteId.'.json?api_key='.$this->settings->apiKey.'&page_size=200&page='.$page;
+		$uri = 'https://api.flowplayer.com/ovp/web/video/v2/site/'.$this->settings->siteId.'.json?api_key='.$this->settings->apiKey.'&page_size=50&page='.$page;
 
 		$response = $this->client->get($uri);
 
@@ -88,7 +88,6 @@ class CraftFlowplayerDriveService extends Component
 			return false;
 		}else{
 			foreach(json_decode($response->getBody())->videos as $video){
-				
 				$return[$video->id] = new FlowplayerDriveVideoElement();
 				$return[$video->id]->fill($video);
 			}
@@ -98,20 +97,33 @@ class CraftFlowplayerDriveService extends Component
 	}
 
 
-	public function getVideosByIds(string $ids)
+	public function getVideosByIds($ids)
 	{
-		$ids = explode(',', $ids);
+		if($ids == null){
+			return [];
+		}
 
 		$return = [];
 
 		foreach($ids as $video){
 				
-			$return[$video] = new FlowplayerDriveVideoElement();
-			
-			$return[$video]->id = $video;
+			$return[$video->id] = FlowplayerDriveVideoElement::createById($video->id);
 		}
 
 		return $return;
+	}
+
+	public function getVideoDetailById(string $id){
+		$uri = 'https://api.flowplayer.com/ovp/web/video/v2/'.$id.'.json?api_key='.$this->settings->apiKey;
+
+		$response = $this->client->get($uri);
+
+		if($response->getStatusCode() != '200'){
+			throw new Exception("Error getting Video list", $response->getStatusCode());
+			return false;
+		}else{
+			return json_decode($response->getBody()->getContents());
+		}	
 	}
 
 

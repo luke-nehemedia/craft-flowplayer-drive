@@ -5,12 +5,11 @@ use craft\base\Element;
 use Craft;
 use lucasbares\craftflowplayerdrive\elements\storage\FlowplayerDriveVideoElementQuery;
 use craft\elements\db\ElementQueryInterface;
+use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 
 class FlowplayerDriveVideoElement extends Element
 {
-    /**
-     * @var int Price
-     */
+
     public $published_at = 0;
 
     public $name = '';
@@ -20,6 +19,12 @@ class FlowplayerDriveVideoElement extends Element
     public $updated_at = '';
 
     public $id = 1;
+
+    public $likes = 0;
+
+    public $dislikes = 0;
+
+    public $thumbnail = '';
 
 
 
@@ -43,8 +48,19 @@ class FlowplayerDriveVideoElement extends Element
     }
 
     public function fill($attributes){
-        $this->id = 'ID:' . $attributes->id;
-        $this->name = 'Name:' . $attributes->name;
+        $this->id = $attributes->id;
+        $this->name = $attributes->name;
+        $this->likes = $attributes->likes;
+        $this->dislikes = $attributes->dislikes;
+        $this->thumbnail = $attributes->images->thumbnail_url;
+    }
+
+    public static function createById(string $id){
+        $obj = new FlowplayerDriveVideoElement;
+        $data = CraftFlowplayerDrive::getInstance()->flowplayerDrive->getVideoDetailById($id);
+        $obj->fill($data);
+
+        return $obj;
     }
 
     protected static function defineSources(string $context = null): array
@@ -78,24 +94,27 @@ class FlowplayerDriveVideoElement extends Element
 	        'name' => \Craft::t('craft-flowplayer-drive', 'Name'),
 	        'created_at' => \Craft::t('craft-flowplayer-drive', 'Erstellungsdatum'),
 	        'published_at' => \Craft::t('craft-flowplayer-drive', 'Veröffentlichungsdatum'),
-	        'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum')
+	        'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum'),
+            'likes' => \Craft::t('craft-flowplayer-drive', 'Likes'),
+            'dislikes' => \Craft::t('craft-flowplayer-drive', 'Dislikes'),
 	    ];
 	}
 
 	protected static function defineTableAttributes(): array
 	{
 	    return [
-	    	'id' => \Craft::t('craft-flowplayer-drive', 'ID'),
 	        'name' => \Craft::t('craft-flowplayer-drive', 'Name'),
 	        'created_at' => \Craft::t('craft-flowplayer-drive', 'Erstellungsdatum'),
 	        'published_at' => \Craft::t('craft-flowplayer-drive', 'Veröffentlichungsdatum'),
-	        'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum')
+	        'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum'),
+            'likes' => \Craft::t('craft-flowplayer-drive', 'Likes'),
+            'dislikes' => \Craft::t('craft-flowplayer-drive', 'Dislikes'),
 	    ];
 	}
 
 	protected static function defineDefaultTableAttributes(string $source): array
 	{
-	    return ['name', 'published_at'];
+	    return ['name', 'published_at','likes'];
 	}
 
 	protected static function defineSearchableAttributes(): array
@@ -204,6 +223,19 @@ class FlowplayerDriveVideoElement extends Element
         }
 
         return $result;
+    }
+
+    /**
+     * Returns the string representation of the element.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        if ($this->name) {
+            return (string)$this->name;
+        }
+        return (string)$this->id ?: static::class;
     }
 
 

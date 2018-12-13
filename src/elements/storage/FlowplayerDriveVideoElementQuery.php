@@ -84,14 +84,16 @@ class FlowplayerDriveVideoElementQuery extends ElementQuery
         }
 
         if($criteria['page'] != null){
-            return [new FlowplayerDriveVideoElement()];
+            $page = $criteria['page'];
+        }else{
+            $page = 1;
         }
 
         if($criteria['orderBy'] != ''){
             
         }
 
-    	return CraftFlowplayerDrive::getInstance()->flowplayerDrive->listVideoElements();
+    	return CraftFlowplayerDrive::getInstance()->flowplayerDrive->listVideoElements($page);
 
         // Cached?
         if (($cachedResult = $this->getCachedResult()) !== null) {
