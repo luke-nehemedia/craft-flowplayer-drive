@@ -10,21 +10,34 @@ use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 class FlowplayerDriveVideoElement extends Element
 {
 
-    public $published_at = 0;
+
+    public $adtag = '';
+    public $categoryid = 0;
+    public $created_at = '';
+    public $description = '';
+    public $duration = 0;
+    public $episode = false;
+    public $externalvideoid = '';
+    public $id = 0;
+    public $thumbnail_url = '';
+    public $normal_image_url = '';
+
+    public $mediafiles = ['original_file_url' => '', 'base_url' => '', 'standard_url' => '', 'high_url' => '', 'm3u8_url' => '', 'webm_url' => ''];
 
     public $name = '';
-
-    public $created_at = '';
-
+    public $noads = true;
+    public $published = false;
+    public $published_at = '';
+    public $siteid = '';
+    public $use_unpublish_date = false;
+    public $unpublished_at = '';
+    public $state = ''; // FINISHED, PROCESSING
+    public $tags = ''; // CSV
     public $updated_at = '';
+    public $userid = '';
+    public $views = 0;
 
-    public $id = 1;
-
-    public $likes = 0;
-
-    public $dislikes = 0;
-
-    public $thumbnail = '';
+    protected $editable = ['userid', 'tags', 'name', 'description', 'categoryid', 'image', 'published', 'published_at', 'use_unpublish_date', 'unpublish_at', 'customfield1', 'customfield', 'additionalCustomFields'];
 
 
 
@@ -42,9 +55,11 @@ class FlowplayerDriveVideoElement extends Element
     public static function statuses(): array
     {
         return [
-            self::STATUS_ENABLED => Craft::t('app', 'Enabled2'),
-            self::STATUS_DISABLED => Craft::t('app', 'Disabled')
+            self::STATUS_ENABLED => Craft::t('app', 'Published'),
+            self::STATUS_DISABLED => Craft::t('app', 'Unpublished')
         ];
+
+        
     }
 
     public function fill($attributes){
