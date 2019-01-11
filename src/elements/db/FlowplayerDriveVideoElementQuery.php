@@ -11,6 +11,7 @@ use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 class FlowplayerDriveVideoElementQuery extends ElementQuery 
 {
 
+    public $video_id;
     public $name;
     public $description;
     public $state;
@@ -80,6 +81,10 @@ class FlowplayerDriveVideoElementQuery extends ElementQuery
             'craftflowplayerdrive.description',
             'craftflowplayerdrive.published',
             'craftflowplayerdrive.state',
+            'craftflowplayerdrive.published_at',
+            'craftflowplayerdrive.created_at',
+            'craftflowplayerdrive.thumbnail_url',
+
         ]);
 
         if ($this->name) {
@@ -96,7 +101,7 @@ class FlowplayerDriveVideoElementQuery extends ElementQuery
 
         if ($this->state) {
             $this->subQuery->andWhere(Db::parseParam('craftflowplayerdrive.state', $this->state));
-        }        
+        }
 
         return parent::beforePrepare();
     }

@@ -19,9 +19,9 @@ class Install extends Migration
 
             // create the craftflowplayerdrive table
             $this->createTable('{{%craftflowplayerdrive}}', [
-                'element_id' => $this->integer()->notNull(),
+                'id' => $this->integer()->notNull(),
 
-                'id' => $this->char(36)->notNull(),
+                'video_id' => $this->char(36)->notNull(),
                 'name' => $this->char(255)->notNull(),
                 'description' => $this->string()->notNull(),
                 'published' => $this->boolean()->notNull(),
@@ -47,13 +47,15 @@ class Install extends Migration
                 'userid' => $this->char(36)->notNull(),
 
                 'uid' => $this->uid(),
+                'dateCreated' => $this->dateTime(),
+                'dateUpdated' => $this->dateTime(),
                 'PRIMARY KEY(id)',
             ]);
 
             // give it a FK to the elements table
             $this->addForeignKey(
                 $this->db->getForeignKeyName('{{%craftflowplayerdrive}}', 'id'),
-                '{{%craftflowplayerdrive}}', 'element_id', '{{%elements}}', 'id', 'CASCADE', null);
+                '{{%craftflowplayerdrive}}', 'id', '{{%elements}}', 'id', 'CASCADE', null);
         }
     }
 

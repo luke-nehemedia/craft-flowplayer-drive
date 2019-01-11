@@ -3,13 +3,14 @@ namespace lucasbares\craftflowplayerdrive\elements;
 
 use craft\base\Element;
 use Craft;
-use lucasbares\craftflowplayerdrive\elements\storage\FlowplayerDriveVideoElementQuery;
+use lucasbares\craftflowplayerdrive\elements\db\FlowplayerDriveVideoElementQuery;
 use craft\elements\db\ElementQueryInterface;
 use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 
 class FlowplayerDriveVideoElement extends Element
 {
 
+    public $video_id = 0;
     public $adtag = '';
     public $categoryid = 0;
     public $created_at = '';
@@ -51,6 +52,7 @@ class FlowplayerDriveVideoElement extends Element
             \Craft::$app->db->createCommand()
                 ->insert('{{%craftflowplayerdrive}}', [
                     'id' => $this->id,
+                    'video_id' => $this->video_id,
                     'name' => $this->name,
                     'description' => $this->description,
                     'published' => $this->published,
@@ -79,6 +81,7 @@ class FlowplayerDriveVideoElement extends Element
         } else {
             \Craft::$app->db->createCommand()
                 ->update('{{%craftflowplayerdrive}}', [
+                    'video_id' => $this->video_id,
                     'name' => $this->name,
                     'description' => $this->description,
                     'published' => $this->published,
@@ -109,27 +112,53 @@ class FlowplayerDriveVideoElement extends Element
         parent::afterSave($isNew);
     }
 
-
-    /**
-     * @inheritdoc
-     */
-    public static function hasStatuses(): bool
-    {
-        return true;
+    public function fill($videoInfo){
+        // todo: automatic with fillablee
+        $this->video_id = $videoInfo->id;
+        $this->name = $videoInfo->name;
+        $this->description = $videoInfo->description;
+        $this->published = $videoInfo->published;
+        $this->views = $videoInfo->views;
+        $this->adtag = $videoInfo->adtag;
+        $this->categoryid = $videoInfo->categoryid;
+        $this->created_at = $videoInfo->created_at;
+        $this->duration = $videoInfo->duration;
+        $this->episode = $videoInfo->name;
+        $this->externalvideoid = $videoInfo->externalvideoid;
+        $this->thumbnail_url = $videoInfo->images->thumbnail_url;
+        $this->normal_image_url = $videoInfo->images->normal_image_url;
+        $this->mediafiles = $videoInfo->mediafiles;
+        $this->noads = $videoInfo->noads;
+        $this->published_at = $videoInfo->published_at;
+        $this->siteid = $videoInfo->siteid;
+        $this->use_unpublish_date = $videoInfo->use_unpublish_date;
+        $this->unpublished_at = $videoInfo->unpublished_at;
+        $this->state = $videoInfo->state;
+        $this->tags = $videoInfo->tags;
+        $this->updated_at = $videoInfo->updated_at;
+        $this->userid = $videoInfo->userid;
     }
 
     /**
      * @inheritdoc
      */
-    public static function statuses(): array
-    {
-        return [
-            self::STATUS_ENABLED => Craft::t('app', 'Published'),
-            self::STATUS_DISABLED => Craft::t('app', 'Unpublished')
-        ];
+    // public static function hasStatuses(): bool
+    // {
+    //     return true;
+    // }
+
+    /**
+     * @inheritdoc
+     */
+    // public static function statuses(): array
+    // {
+    //     return [
+    //         self::STATUS_ENABLED => Craft::t('app', 'Published'),
+    //         self::STATUS_DISABLED => Craft::t('app', 'Unpublished')
+    //     ];
 
         
-    }
+    // }
 
     
     protected static function defineSources(string $context = null): array
@@ -138,7 +167,8 @@ class FlowplayerDriveVideoElement extends Element
 	        [
 	            'key' => '*',
 	            'label' => 'Alle Videos',
-	            'criteria' => []
+	            'criteria' => [],
+                'hasThumbs' => true,
 	        ],
 	        [
 	            'key' => 'public',
@@ -164,8 +194,8 @@ class FlowplayerDriveVideoElement extends Element
 	        'created_at' => \Craft::t('craft-flowplayer-drive', 'Erstellungsdatum'),
 	        'published_at' => \Craft::t('craft-flowplayer-drive', 'Veröffentlichungsdatum'),
 	        'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum'),
-            'likes' => \Craft::t('craft-flowplayer-drive', 'Likes'),
-            'dislikes' => \Craft::t('craft-flowplayer-drive', 'Dislikes'),
+            'views' => \Craft::t('craft-flowplayer-drive', 'Views'),
+            'published' => \Craft::t('craft-flowplayer-drive', 'Veröffentlicht'),
 	    ];
 	}
 
@@ -175,6 +205,7 @@ class FlowplayerDriveVideoElement extends Element
 	        'name' => \Craft::t('craft-flowplayer-drive', 'Name'),
 	        'created_at' => \Craft::t('craft-flowplayer-drive', 'Erstellungsdatum'),
 	        'published_at' => \Craft::t('craft-flowplayer-drive', 'Veröffentlichungsdatum'),
+            'published' => \Craft::t('craft-flowplayer-drive', 'Veröffentlicht'),
 	        'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum'),
             'likes' => \Craft::t('craft-flowplayer-drive', 'Likes'),
             'dislikes' => \Craft::t('craft-flowplayer-drive', 'Dislikes'),
@@ -183,17 +214,38 @@ class FlowplayerDriveVideoElement extends Element
 
 	protected static function defineDefaultTableAttributes(string $source): array
 	{
-	    return ['name', 'published_at','likes'];
+	    return ['name', 'created_at','published','views'];
 	}
 
 	protected static function defineSearchableAttributes(): array
 	{
-   		return ['name'];
+   		return ['name', 'description'];
 	}
+
+    protected function tableAttributeHtml(string $attribute): string
+    {
+        switch ($attribute) {
+            case 'published':
+                return ($attribute == 1) ?  'true' :  'false';
+
+        }
+
+        return parent::tableAttributeHtml($attribute);
+    }
+
+
+
+
 
 	public static function find(): ElementQueryInterface
     {
         return new FlowplayerDriveVideoElementQuery(static::class);
+    }
+
+
+    public function getThumbUrl(int $size)
+    {
+        return $this->thumbnail_url;
     }
 
 
@@ -209,6 +261,8 @@ class FlowplayerDriveVideoElement extends Element
         }
         return (string)$this->id ?: static::class;
     }
+
+
 
 
 

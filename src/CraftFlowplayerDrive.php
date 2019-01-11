@@ -14,6 +14,9 @@ use lucasbares\craftflowplayerdrive\services\CraftFlowplayerDriveService as Craf
 use lucasbares\craftflowplayerdrive\variables\CraftFlowplayerDriveVariable;
 use lucasbares\craftflowplayerdrive\models\Settings;
 use lucasbares\craftflowplayerdrive\fields\VideoField as VideoFieldField;
+use lucasbares\craftflowplayerdrive\elements\FlowplayerDriveVideoElement;
+use lucasbares\craftflowplayerdrive\elements\db\FlowplayerDriveVideoElementQuery;
+
 
 use Craft;
 use craft\base\Plugin;
@@ -120,7 +123,7 @@ class CraftFlowplayerDrive extends Plugin
         );
 
         $this->setComponents([
-            'flowplayerDrive' => CraftFlowplayerDriveServiceService::class,
+            'flowplayerDriveService' => CraftFlowplayerDriveServiceService::class,
         ]);
 
         // Do something after we're installed
@@ -160,6 +163,22 @@ class CraftFlowplayerDrive extends Plugin
             ),
             __METHOD__
         );
+
+        //$videos =  $this->flowplayerDriveService->listVideos();
+
+        // foreach($videos as $video){
+        //     // search
+        //   //  if(true){
+        //         $element = new FlowplayerDriveVideoElement();
+        //         $element->fill($video);
+        //         Craft::$app->elements->saveElement($element);
+
+        //         //dd($element);
+        //     //}
+
+
+
+        // }
     }
 
     // Protected Methods
