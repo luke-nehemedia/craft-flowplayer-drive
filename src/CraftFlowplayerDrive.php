@@ -21,6 +21,7 @@ use craft\services\Plugins;
 use craft\events\PluginEvent;
 use craft\services\Fields;
 use craft\web\twig\variables\CraftVariable;
+use craft\web\twig\variables\Cp;
 use craft\events\RegisterComponentTypesEvent;
 
 use yii\base\Event;
@@ -64,7 +65,7 @@ class CraftFlowplayerDrive extends Plugin
      *
      * @var string
      */
-    public $schemaVersion = '0.0.1';
+    public $schemaVersion = '0.0.4-dev';
 
 	/**
      * Whether there is a settings page
@@ -72,6 +73,11 @@ class CraftFlowplayerDrive extends Plugin
      * @var boolean
      */
 	public $hasCpSettings = true;
+
+    /**
+     * @var bool Whether the plugin has its own section in the CP
+     */
+    public $hasCpSection = true;
 
 
     // Public Methods
@@ -93,7 +99,7 @@ class CraftFlowplayerDrive extends Plugin
         parent::init();
         self::$plugin = $this;
 
-        // Register our fields
+        //Register our fields
         Event::on(
             Fields::class,
             Fields::EVENT_REGISTER_FIELD_TYPES,
@@ -102,7 +108,7 @@ class CraftFlowplayerDrive extends Plugin
             }
         );
 
-        // Register our variables
+        //Register our variables
         Event::on(
             CraftVariable::class,
             CraftVariable::EVENT_INIT,
@@ -183,5 +189,19 @@ class CraftFlowplayerDrive extends Plugin
                 'settings' => $this->getSettings()
             ]
         );
+    }
+
+    public function getCpNavItem()
+    {
+        $item = parent::getCpNavItem();
+        $item['badgeCount'] = 5;
+        // $item['subnav'] = [
+        //     'index' => ['label' => 'Übersicht', 'url' => 'flowplayerdrive/index'],
+        //     'createe' => ['label' => 'Neues Video', 'url' => 'flowplayerdrive/create'],
+        //     'settings' => ['label' => 'Einstellungen', 'url' => 'flowplayerdrive/settings'],
+        // ];
+        //$item['label'] = 'Flowplayer Drive';
+        //$item['url'] = 'flowplayerdrive';
+        return $item;
     }
 }

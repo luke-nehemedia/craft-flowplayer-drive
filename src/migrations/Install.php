@@ -19,17 +19,19 @@ class Install extends Migration
 
             // create the craftflowplayerdrive table
             $this->createTable('{{%craftflowplayerdrive}}', [
+                'element_id' => $this->integer()->notNull(),
+
                 'id' => $this->char(36)->notNull(),
                 'name' => $this->char(255)->notNull(),
                 'description' => $this->string()->notNull(),
-                'published' => $this->boolean()->notNull()->default(false),
+                'published' => $this->boolean()->notNull(),
                 'views' => $this->integer()->notNull(),
 
                 'adtag' => $this->char(255),
                 'categoryid' =>  $this->char(36),
                 'created_at' => $this->dateTime()->notNull(),
                 'duration' => $this->integer()->notNull(),
-                'episode' => $this->boolean()->notNull()->default(false),
+                'episode' => $this->boolean()->notNull(),
                 'externalvideoid' => $this->char(255),
                 'thumbnail_url' => $this->string()->notNull(),
                 'normal_image_url' => $this->string()->notNull(),
@@ -51,7 +53,7 @@ class Install extends Migration
             // give it a FK to the elements table
             $this->addForeignKey(
                 $this->db->getForeignKeyName('{{%craftflowplayerdrive}}', 'id'),
-                '{{%craftflowplayerdrive}}', 'id', '{{%elements}}', 'id', 'CASCADE', null);
+                '{{%craftflowplayerdrive}}', 'element_id', '{{%elements}}', 'id', 'CASCADE', null);
         }
     }
 
@@ -60,10 +62,7 @@ class Install extends Migration
      */
     public function safeDown()
     {
-        if ($this->db->tableExists('{{%craftflowplayerdrive}}')) {
-            // delete foreign key and table
-            $this->deleteForeignKey( $this->db->getForeignKeyName('{{%craftflowplayerdrive}}', 'id'), '{{%craftflowplayerdrive}}');
-            
+        if ($this->db->tableExists('{{%craftflowplayerdrive}}')) {            
             $this->dropTable('{{%craftflowplayerdrive}}');
         }
     }

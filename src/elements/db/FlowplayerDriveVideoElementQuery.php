@@ -10,100 +10,97 @@ use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 
 class FlowplayerDriveVideoElementQuery extends ElementQuery 
 {
-    public $price;
-    public $currency;
-    public $page;
 
-    public function price($value)
+    public $name;
+    public $description;
+    public $state;
+    public $published;
+
+    public $adtag;
+    public $categoryid;
+    public $created_at;
+    public $duration;
+    public $episode;
+    public $externalvideoid;
+    public $id;
+    public $thumbnail_url;
+    public $normal_image_url;
+
+    public $mediafiles;
+
+    
+    public $noads;
+    public $published_at;
+    public $siteid;
+    public $use_unpublish_date;
+    public $unpublished_at;
+    
+    public $tags;
+    public $updated_at;
+    public $userid;
+    public $views;
+
+    public function name($value)
     {
-        $this->price = $value;
+        $this->name = $value;
 
         return $this;
     }
 
-    public function currency($value)
+    public function description($value)
     {
-        $this->currency = $value;
+        $this->description = $value;
 
         return $this;
     }
+
+    public function published($value)
+    {
+        $this->published = $value;
+
+        return $this;
+    }
+
+    public function state($value)
+    {
+        $this->state = $value;
+
+        return $this;
+    }
+
 
     protected function beforePrepare(): bool
     {
-    	return parent::beforePrepare();
-	}
+        // join in the craftflowplayerdrive table
+        $this->joinElementTable('craftflowplayerdrive');
 
-	public function ids($db = NULL) : array
-	{
-		die('ide');
-	}
+        // select the price column
+        $this->query->select([
+            'craftflowplayerdrive.name',
+            'craftflowplayerdrive.description',
+            'craftflowplayerdrive.published',
+            'craftflowplayerdrive.state',
+        ]);
 
-	public function order(string $value) 
-	{
-		die('order');
-		return $this;
-	}
-
-	public function asArray(bool $value = true)
-    {
-    	die('1');
-        $this->asArray = $value;
-        return $this;
-    }
-
-    public function orderBy($columns)
-    {
-    	//echo('2');
-        parent::orderBy($columns);
-
-        // If $columns normalizes to an empty array, just set it to null
-        if ($this->orderBy === []) {
-            $this->orderBy = null;
+        if ($this->name) {
+            $this->subQuery->andWhere(Db::parseParam('craftflowplayerdrive.name', $this->name));
         }
 
-
-        return $this;
-    }
-
-    public function prepare($builder){
-    	die('3');
-    }
-
-    public function find(array $attributes = null): array
-    {
-        die('suche');
-    }
-
-    // Called by modal to list elements
-    public function all($db = null)
-    {
-        $criteria = $this->getCriteria();
-
-        if($criteria['search'] != ''){
-            die('suche');
+        if ($this->description) {
+            $this->subQuery->andWhere(Db::parseParam('craftflowplayerdrive.description', $this->description));
         }
 
-        if($criteria['page'] != null){
-            $page = $criteria['page'];
-        }else{
-            $page = 1;
+        if ($this->published) {
+            $this->subQuery->andWhere(Db::parseParam('craftflowplayerdrive.published', $this->published));
         }
 
-        if($criteria['orderBy'] != ''){
-            
-        }
+        if ($this->state) {
+            $this->subQuery->andWhere(Db::parseParam('craftflowplayerdrive.state', $this->state));
+        }        
 
-    	return CraftFlowplayerDrive::getInstance()->flowplayerDrive->listVideoElements($page);
-
-        // Cached?
-        if (($cachedResult = $this->getCachedResult()) !== null) {
-            if ($this->with) {
-                Craft::$app->getElements()->eagerLoadElements($this->elementType, $cachedResult, $this->with);
-            }
-            return $cachedResult;
-        }
-
-        return parent::all($db);
+        return parent::beforePrepare();
     }
+
+    
 
 }

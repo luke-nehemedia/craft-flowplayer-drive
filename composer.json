@@ -2,7 +2,7 @@
     "name": "lucasbares/craft-flowplayer-drive",
     "description": "This plugin includes Flowplayer Drive into craftcms.",
     "type": "craft-plugin",
-    "version": "0.0.1-dev",
+    "version": "0.0.4-dev",
     "keywords": [
         "craft",
         "cms",
@@ -33,7 +33,7 @@
         "name": "Craft Flowplayer Drive",
         "handle": "craft-flowplayer-drive",
         "hasCpSettings": true,
-        "hasCpSection": false,
+        "hasCpSection": true,
         "changelogUrl": "https://raw.githubusercontent.com/luke-nehemedia/craft-flowplayer-drive/master/CHANGELOG.md",
         "components": {
             "craftFlowplayerDriveService": "lucasbares\\craftflowplayerdrive\\services\\CraftFlowplayerDriveService"
