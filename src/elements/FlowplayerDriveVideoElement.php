@@ -10,7 +10,6 @@ use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 class FlowplayerDriveVideoElement extends Element
 {
 
-
     public $adtag = '';
     public $categoryid = 0;
     public $created_at = '';
@@ -39,6 +38,76 @@ class FlowplayerDriveVideoElement extends Element
 
     protected $editable = ['userid', 'tags', 'name', 'description', 'categoryid', 'image', 'published', 'published_at', 'use_unpublish_date', 'unpublish_at', 'customfield1', 'customfield', 'additionalCustomFields'];
 
+
+    /**
+     * This function is responsible for keeping your element table updated when elements are saved. 
+     * The afterSave() method is a part of the standard element saving control flow.
+     *
+     * @param boolean $isNew
+     */
+    public function afterSave(bool $isNew)
+    {
+        if ($isNew) {
+            \Craft::$app->db->createCommand()
+                ->insert('{{%craftflowplayerdrive}}', [
+                    'id' => $this->id,
+                    'name' => $this->name,
+                    'description' => $this->description,
+                    'published' => $this->published,
+                    'views' => $this->views,
+
+                    'adtag' => $this->adtag,
+                    'categoryid' =>  $this->categoryid,
+                    'created_at' => $this->created_at,
+                    'duration' => $this->duration,
+                    'episode' => $this->episode,
+                    'externalvideoid' => $this->externalvideoid,
+                    'thumbnail_url' => $this->thumbnail_url,
+                    'normal_image_url' => $this->normal_image_url,
+                    'mediafiles' => $this->mediafiles,
+                    'noads' => $this->noads,
+                    'published_at' => $this->published_at,
+                    'siteid' => $this->siteid
+                    'use_unpublish_date' => $this->use_unpublish_date,
+                    'unpublished_at' => $this->unpublished_at,
+                    'state' => $this->state,
+                    'tags' => $this->tags,
+                    'updated_at' => $this->updated_at,
+                    'userid' => $this->userid,
+                ])
+                ->execute();
+        } else {
+            \Craft::$app->db->createCommand()
+                ->update('{{%craftflowplayerdrive}}', [
+                    'name' => $this->name,
+                    'description' => $this->description,
+                    'published' => $this->published,
+                    'views' => $this->views,
+
+                    'adtag' => $this->adtag,
+                    'categoryid' =>  $this->categoryid,
+                    'created_at' => $this->created_at,
+                    'duration' => $this->duration,
+                    'episode' => $this->episode,
+                    'externalvideoid' => $this->externalvideoid,
+                    'thumbnail_url' => $this->thumbnail_url,
+                    'normal_image_url' => $this->normal_image_url,
+                    'mediafiles' => $this->mediafiles,
+                    'noads' => $this->noads,
+                    'published_at' => $this->published_at,
+                    'siteid' => $this->siteid
+                    'use_unpublish_date' => $this->use_unpublish_date,
+                    'unpublished_at' => $this->unpublished_at,
+                    'state' => $this->state,
+                    'tags' => $this->tags,
+                    'updated_at' => $this->updated_at,
+                    'userid' => $this->userid,
+                ], ['id' => $this->id])
+                ->execute();
+        }
+
+        parent::afterSave($isNew);
+    }
 
 
     /**
