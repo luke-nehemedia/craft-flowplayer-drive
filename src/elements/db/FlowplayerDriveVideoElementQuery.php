@@ -1,5 +1,5 @@
 <?php
-namespace lucasbares\craftflowplayerdrive\elements\storage;
+namespace lucasbares\craftflowplayerdrive\elements\db;
 
 use craft\db\Query;
 use craft\elements\db\ElementQuery;
