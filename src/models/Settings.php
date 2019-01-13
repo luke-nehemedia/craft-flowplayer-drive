@@ -55,6 +55,13 @@ class Settings extends Model
      */
     public $userId = 'abc000de-0000-0a0b-00ab-abc0d000000';
 
+    /**
+     * Refresh-Interval
+     *
+     */
+    public $refreshInterval = 60*60*12; // 12h
+
+
     // Public Methods
     // =========================================================================
 
@@ -73,6 +80,7 @@ class Settings extends Model
         return [
             [['siteId', 'apiKey','userId'], 'string'],
             [['siteId', 'apiKey'], 'required'],
+            [['refreshInterval'], 'integer'],
         ];
     }
 }

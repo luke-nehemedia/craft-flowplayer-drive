@@ -40,6 +40,11 @@ class FlowplayerDriveVideoElement extends Element
     protected $editable = ['userid', 'tags', 'name', 'description', 'categoryid', 'image', 'published', 'published_at', 'use_unpublish_date', 'unpublish_at', 'customfield1', 'customfield', 'additionalCustomFields'];
 
 
+    public function beforeSave(bool $isNew): bool
+    {
+        dd($this);
+    }
+
     /**
      * This function is responsible for keeping your element table updated when elements are saved. 
      * The afterSave() method is a part of the standard element saving control flow.
@@ -248,6 +253,68 @@ class FlowplayerDriveVideoElement extends Element
         return $this->thumbnail_url;
     }
 
+    public function getIsEditable(): bool
+    {
+        return true;
+        //return \Craft::$app->user->checkPermission('edit-product:'.$this->getType()->id);
+    }
+
+    public function getEditorHtml(): string
+    {
+        // Name field
+        $html = \Craft::$app->getView()->renderTemplateMacro('_includes/forms', 'textField', [
+            [
+                'label' => \Craft::t('app', 'Name'),
+                'siteId' => $this->siteId,
+                'id' => 'name',
+                'name' => 'name',
+                'value' => $this->name,
+                'errors' => $this->getErrors('name'),
+                'first' => true,
+                'autofocus' => true,
+                'required' => true
+            ]
+        ]);
+
+        // Description field
+        $html .= \Craft::$app->getView()->renderTemplateMacro('_includes/forms', 'textField', [
+            [
+                'label' => \Craft::t('app', 'Description'),
+                'siteId' => $this->siteId,
+                'id' => 'description',
+                'name' => 'description',
+                'value' => $this->description,
+                'errors' => $this->getErrors('description'),
+                'first' => false,
+                'autofocus' => false,
+                'required' => false
+            ]
+        ]);
+
+        // Published
+        $html .= '<div class="field"><div class="heading">
+                            <label id="editor_'.$this->id.'-publish-label" for="published">Veröffentlicht</label></div><div class="input ltr">';
+        $html .= \Craft::$app->getView()->renderTemplateMacro('_includes/forms', 'lightswitch', [
+            [
+                'label' => \Craft::t('app', 'Veröffentlicht'),
+                'siteId' => $this->siteId,
+                'id' => 'published',
+                'name' => 'published',
+                'value' => $this->published,
+                'on' => $this->published,
+                'errors' => $this->getErrors('published'),
+                'first' => false,
+                'autofocus' => false,
+                'required' => false,
+                'labelId' => 'editor_'.$this->id.'-publish-label',
+            ]
+        ]);
+        $html .= '</div></div>';
+
+        $html .= parent::getEditorHtml();
+
+        return $html;
+    }
 
     /**
      * Returns the string representation of the element.

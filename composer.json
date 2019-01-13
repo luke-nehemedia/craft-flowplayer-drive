@@ -2,7 +2,7 @@
     "name": "lucasbares/craft-flowplayer-drive",
     "description": "This plugin includes Flowplayer Drive into craftcms.",
     "type": "craft-plugin",
-    "version": "0.0.4-dev",
+    "version": "0.0.5-dev",
     "keywords": [
         "craft",
         "cms",

@@ -10,7 +10,7 @@
 
 namespace lucasbares\craftflowplayerdrive;
 
-use lucasbares\craftflowplayerdrive\services\CraftFlowplayerDriveService as CraftFlowplayerDriveServiceService;
+use lucasbares\craftflowplayerdrive\services\FlowplayerDriveService;
 use lucasbares\craftflowplayerdrive\variables\CraftFlowplayerDriveVariable;
 use lucasbares\craftflowplayerdrive\models\Settings;
 use lucasbares\craftflowplayerdrive\fields\VideoField as VideoFieldField;
@@ -26,8 +26,9 @@ use craft\services\Fields;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\twig\variables\Cp;
 use craft\events\RegisterComponentTypesEvent;
-
+use craft\web\UrlManager;
 use yii\base\Event;
+use craft\events\RegisterUrlRulesEvent;
 
 /**
  * Craft plugins are very much like little applications in and of themselves. We’ve made
@@ -68,7 +69,7 @@ class CraftFlowplayerDrive extends Plugin
      *
      * @var string
      */
-    public $schemaVersion = '0.0.4-dev';
+    public $schemaVersion = '0.0.5-dev';
 
 	/**
      * Whether there is a settings page
@@ -123,7 +124,7 @@ class CraftFlowplayerDrive extends Plugin
         );
 
         $this->setComponents([
-            'flowplayerDriveService' => CraftFlowplayerDriveServiceService::class,
+            'flowplayerDriveService' => FlowplayerDriveService::class,
         ]);
 
         // Do something after we're installed
@@ -136,6 +137,18 @@ class CraftFlowplayerDrive extends Plugin
                 }
             }
         );
+
+        // register the actions
+        Event::on(
+        UrlManager::class,
+        UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+        function(RegisterUrlRulesEvent $event) {
+            // easy route for demonstration
+            $event->rules[] = [
+                'pattern' => '/some-nice-url',
+                'route'   => 'craft-flowplayer-drive/videolist/refresh'
+            ];
+        });
 
 		/**
 		 * Logging in Craft involves using one of the following methods:
@@ -169,17 +182,19 @@ class CraftFlowplayerDrive extends Plugin
         // foreach($videos as $video){
         //     // search
         //   //  if(true){
-        //         $element = new FlowplayerDriveVideoElement();
+                 //$element = FlowplayerDriveVideoElement::find()->one();
         //         $element->fill($video);
         //         Craft::$app->elements->saveElement($element);
 
-        //         //dd($element);
+        //dd($element);
         //     //}
 
 
 
         // }
     }
+
+
 
     // Protected Methods
     // =========================================================================

@@ -27,7 +27,7 @@
 }}
 
 {{ forms.textField({
-	first: true,
+	first: false,
     label: 'setting-apiKey-label'|t('craft-flowplayerdrive'),
     instructions: 'setting-apiKey-instructions'|t('craft-flowplayerdrive'),
     id: 'apiKey',
@@ -37,10 +37,19 @@
 
 
 {{ forms.textField({
-	first: true,
+	first: false,
     label: 'setting-userId-label'|t('craft-flowplayerdrive'),
     instructions: 'setting-userId-instructions'|t('craft-flowplayerdrive'),
     id: 'userId',
     name: 'userId',
     value: settings.userId})
+}}
+
+{{ forms.textField({
+    first: false,
+    label: 'setting-refreshInterval-label'|t('craft-flowplayerdrive'),
+    instructions: 'setting-refreshInterval-instructions'|t('craft-flowplayerdrive'),
+    id: 'refreshInterval',
+    name: 'refreshInterval',
+    value: settings.refreshInterval})
 }}

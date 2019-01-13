@@ -19,7 +19,7 @@ use craft\base\Component;
 use GuzzleHttp\Client as Client;
 
 /**
- * CraftFlowplayerDriveService Service
+ * FlowplayerDriveService Service
  *
  * All of your plugin’s business logic should go in services, including saving data,
  * retrieving data, etc. They provide APIs that your controllers, template variables,
@@ -31,7 +31,7 @@ use GuzzleHttp\Client as Client;
  * @package   CraftFlowplayerDrive
  * @since     1.0.0
  */
-class CraftFlowplayerDriveService extends Component
+class FlowplayerDriveService extends Component
 {
 	/**
 	 * Instance of the http client
@@ -62,7 +62,7 @@ class CraftFlowplayerDriveService extends Component
 	}
 	
 
-
+	// old
 	public function listVideos($page = 1){
 		$uri = 'https://api.flowplayer.com/ovp/web/video/v2/site/'.$this->settings->siteId.'.json?api_key='.$this->settings->apiKey.'&page='.$page;
 
@@ -74,6 +74,21 @@ class CraftFlowplayerDriveService extends Component
 		}else{
 			return json_decode($response->getBody())->videos;
 		}	
+	}
+
+	public function getVideoList($page = 1, $page_size = 20){
+		$uri = 'https://api.flowplayer.com/ovp/web/video/v2/site/'.$this->settings->siteId.'.json?api_key='.$this->settings->apiKey.'&page='.$page;
+
+		if($page_size != 20) $uri .= '&page_size='.$page_size;
+
+		$response = $this->client->get($uri);
+
+		if($response->getStatusCode() != '200'){
+			throw new Exception("Error getting Video list", $response->getStatusCode());
+			return false;
+		}else{
+			return json_decode($response->getBody())->videos;
+		}
 	}
 
 	public function listVideoElements($page = 1){
