@@ -11,6 +11,7 @@ use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 class FlowplayerDriveVideoElement extends Element
 {
 
+    // Flowplayer-Drive Attributes
     public $video_id = 0;
     public $adtag = '';
     public $categoryid = 0;
@@ -22,9 +23,7 @@ class FlowplayerDriveVideoElement extends Element
     public $id = 0;
     public $thumbnail_url = '';
     public $normal_image_url = '';
-
     public $mediafiles = ['original_file_url' => '', 'base_url' => '', 'standard_url' => '', 'high_url' => '', 'm3u8_url' => '', 'webm_url' => ''];
-
     public $name = '';
     public $noads = true;
     public $published = false;
@@ -38,34 +37,58 @@ class FlowplayerDriveVideoElement extends Element
     public $userid = '';
     public $views = 0;
 
+    /**
+     * Editable attributes
+     * 
+     * @var array
+     * @access public
+     */
     public $editable = [ 'name', 'description', 'published'];
 
-    protected $obtained = ['adtag','categoryid', 'created_at', 'duration', 'episode', 'externalvideoid', 'mediafiles', 'noads', 'published_at', 'siteid', 'use_unpublish_date', 'unpublished_at', 'state',  'tags', 'updated_at', 'userid', 'views' ];
+    /**
+     * Attributes obtained by API
+     * 
+     * @var array
+     * @access protected
+     */
+    protected $obtainable = ['adtag','categoryid', 'created_at', 'duration', 'episode', 'externalvideoid', 'mediafiles', 'noads', 'published_at', 'siteid', 'use_unpublish_date', 'unpublished_at', 'state',  'tags', 'updated_at', 'userid', 'views' ];
 
     /**
-     * Flowplayer drive service
+     * Flowplayer drive service instance
      * 
      * @var lucasbares\craftflowplayerdrive\services\FlowplayerDriveService;
      * @access protected
      */
     protected $service;
 
+    /**
+     * Initialization 
+     *
+     * Stores an instance of the servie provider into $this->service
+     *
+     * @return void
+     */
     public function init(){
         $this->service = CraftFlowplayerDrive::getInstance()->flowplayerDriveService;
     }
 
+    /**
+     * Updates the element via API before saving it to the local database
+     *
+     * @param boolean $isNew whether it is a new or updated element
+     * @return bool
+     */
     public function beforeSave(bool $isNew): bool
     {
-
-        // Type convert to bool
+        // Type convert to bool (for API call)
         if($this->published == '1' or $this->published == 1){
             $this->published = true;
         }else{
             $this->published = false;
         }
         
+        // Save existing items to API
         if(!$isNew){
-            // Save to API
             return $this->service->updateVideoElement($this);
         }
     }
@@ -74,7 +97,7 @@ class FlowplayerDriveVideoElement extends Element
      * This function is responsible for keeping your element table updated when elements are saved. 
      * The afterSave() method is a part of the standard element saving control flow.
      *
-     * @param boolean $isNew
+     * @param boolean $isNew whether it is a new or updated element
      */
     public function afterSave(bool $isNew)
     {
@@ -141,35 +164,33 @@ class FlowplayerDriveVideoElement extends Element
         parent::afterSave($isNew);
     }
 
+    /**
+     * Fill model with data obtained by the API
+     *
+     * @param stdObject $videoInfo json object with information obtained by the API-call
+     * @return void
+     */
     public function fillFromAPI($videoInfo){
-        // todo: automatic with fillable
+        
         $this->video_id = $videoInfo->id;
-        $this->name = $videoInfo->name;
-        $this->description = $videoInfo->description;
-        $this->published = $videoInfo->published;
-        $this->views = $videoInfo->views;
-        $this->adtag = $videoInfo->adtag;
-        $this->categoryid = $videoInfo->categoryid;
-        $this->created_at = $videoInfo->created_at;
-        $this->duration = $videoInfo->duration;
-        $this->episode = $videoInfo->name;
-        $this->externalvideoid = $videoInfo->externalvideoid;
-        $this->thumbnail_url = $videoInfo->images->thumbnail_url;
-        $this->normal_image_url = $videoInfo->images->normal_image_url;
-        $this->mediafiles = $videoInfo->mediafiles;
-        $this->noads = $videoInfo->noads;
-        $this->published_at = $videoInfo->published_at;
-        $this->siteid = $videoInfo->siteid;
-        $this->use_unpublish_date = $videoInfo->use_unpublish_date;
-        $this->unpublished_at = $videoInfo->unpublished_at;
-        $this->state = $videoInfo->state;
-        $this->tags = $videoInfo->tags;
-        $this->updated_at = $videoInfo->updated_at;
-        $this->userid = $videoInfo->userid;
+
+        foreach ($this->editable as $key) {
+            $this->$key = $videoInfo->$key;
+        }
+
+        foreach ($this->obtainable as $key) {
+            $this->$key = $videoInfo->$key;
+        }
     }
 
+    /**
+     * Update the model with information obtained from the API
+     *
+     * @param stdObject $videoInfo json object with information obtained by the API-call
+     * @return void
+     */
     public function updateFromAPI($videoInfo){
-        foreach ($this->obtained as $key) {
+        foreach ($this->obtainable as $key) {
             $this->$key = $videoInfo->$key;
         }
 
@@ -184,26 +205,50 @@ class FlowplayerDriveVideoElement extends Element
 
     }
 
-    /**
-     * @inheritdoc
-     */
-    // public static function hasStatuses(): bool
-    // {
-    //     return true;
-    // }
 
     /**
      * @inheritdoc
      */
-    // public static function statuses(): array
-    // {
-    //     return [
-    //         self::STATUS_ENABLED => Craft::t('app', 'Published'),
-    //         self::STATUS_DISABLED => Craft::t('app', 'Unpublished')
-    //     ];
+    public static function hasStatuses(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function statuses(): array
+    {
+        return [
+            self::STATUS_ENABLED => Craft::t('app', 'Published'),
+            self::STATUS_DISABLED => Craft::t('app', 'Unpublished')
+        ];
 
         
-    // }
+    }
+
+    public function isPublished(){
+        if($this->published == 1 or $this->published == true or $this->published == '1'){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getStatus()
+    {
+        if($this->isPublished()){
+            return self::STATUS_ENABLED;
+        }else{
+            return self::STATUS_DISABLED;
+        }
+        
+        // idea: include pending depending on "state" or when using unpublish_date
+    }
 
     
     protected static function defineSources(string $context = null): array
