@@ -4,6 +4,7 @@ namespace lucasbares\craftflowplayerdrive\elements;
 use craft\base\Element;
 use Craft;
 use lucasbares\craftflowplayerdrive\elements\db\FlowplayerDriveVideoElementQuery;
+use lucasbares\craftflowplayerdrive\services\FlowplayerDriveService;
 use craft\elements\db\ElementQueryInterface;
 use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 
@@ -37,13 +38,33 @@ class FlowplayerDriveVideoElement extends Element
     public $userid = '';
     public $views = 0;
 
-    protected $editable = [ 'name', 'description', 'published'];
+    public $editable = [ 'name', 'description', 'published'];
 
     protected $obtained = ['adtag','categoryid', 'created_at', 'duration', 'episode', 'externalvideoid', 'mediafiles', 'noads', 'published_at', 'siteid', 'use_unpublish_date', 'unpublished_at', 'state',  'tags', 'updated_at', 'userid', 'views' ];
 
+    /**
+     * Flowplayer drive service
+     * 
+     * @var lucasbares\craftflowplayerdrive\services\FlowplayerDriveService;
+     * @access protected
+     */
+    protected $service;
 
-    public function ___beforeSave(bool $isNew): bool
+    public function init(){
+        $this->service = CraftFlowplayerDrive::getInstance()->flowplayerDriveService;
+    }
+
+    public function beforeSave(bool $isNew): bool
     {
+        // Type convert to bool
+        if($this->published == '1' or $this->published == 1){
+            $this->published = true;
+        }else{
+            $this->published = false;
+        }
+        
+        // Save to API
+        return $this->service->updateVideoElement($this);
     }
 
     /**

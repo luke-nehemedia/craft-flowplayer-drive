@@ -17,6 +17,7 @@ use Craft;
 use craft\base\Component;
 
 use GuzzleHttp\Client as Client;
+use GuzzleHttp\Psr7\Request;
 
 /**
  * FlowplayerDriveService Service
@@ -48,6 +49,8 @@ class FlowplayerDriveService extends Component
 	 * @access protected
 	 */
 	protected $settings;
+
+	
 	
     // Public Methods
     // =========================================================================
@@ -59,6 +62,8 @@ class FlowplayerDriveService extends Component
 		
 		// Store settings
 		$this->settings = CraftFlowplayerDrive::$plugin->getSettings();
+
+		
 	}
 	
 
@@ -139,6 +144,57 @@ class FlowplayerDriveService extends Component
 		}else{
 			return json_decode($response->getBody()->getContents());
 		}	
+	}
+
+	public function updateVideo($videoElement, $values){
+		$uri = 'https://api.flowplayer.com/ovp/web/video/v2/update.json';
+
+		$requestBody = [
+			'api_key'	=> 	$this->settings->apiKey,
+			'siteid'	=>	$this->settings->siteId,
+			'id'		=>	$videoElement->video_id
+		];
+
+		foreach ($values as $key => $value) {
+			$requestBody[$key] = $value;
+		}
+
+		// send request
+		$request = new Request('POST', $uri, [], $requestBody);
+		$result = $this->client->send($request);
+
+
+		dd($result->getBody());
+
+	}
+
+	public function updateVideoElement($videoElement){
+		$uri = 'https://api.flowplayer.com/ovp/web/video/v2/update.json';
+
+		$requestBody = [
+			'api_key'	=> 	$this->settings->apiKey,
+			'siteid'	=>	$this->settings->siteId,
+			'id'		=>	$videoElement->video_id,
+		];
+
+		foreach ($videoElement->editable as $key) {
+			$requestBody[$key] = $videoElement->$key;
+		}
+
+		$options = [
+		    'json' => $requestBody,
+		   ]; 
+
+		// send request
+		$response = $this->client->post($uri, $options);
+
+		if($response->getStatusCode() != 200){
+			Craft::$app->getSession()->setError('Error saving video details: '.$response->getReasonPhrase());
+			return false;
+		}
+
+		return true;
+
 	}
 
 
