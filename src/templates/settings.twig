@@ -15,6 +15,13 @@
 
 {% import "_includes/forms" as forms %}
 
+
+<div class="buttons">
+    <a class="btn submit refresh icon" data-icon="refresh" href="{{url('craft-flowplayer-drive/refresh')}}">Refresh Videolist</a>
+    <a class="btn submit delete icon" data-icon="delete" href="{{url('craft-flowplayer-drive/clear')}}">Clear Videolist</a>
+</div>
+
+
 {% do view.registerAssetBundle("lucasbares\\craftflowplayerdrive\\assetbundles\\craftflowplayerdrive\\CraftFlowplayerDriveAsset") %}
 
 {{ forms.textField({
@@ -53,3 +60,4 @@
     name: 'refreshInterval',
     value: settings.refreshInterval})
 }}
+

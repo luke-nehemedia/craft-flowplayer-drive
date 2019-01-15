@@ -37,12 +37,13 @@ class FlowplayerDriveVideoElement extends Element
     public $userid = '';
     public $views = 0;
 
-    protected $editable = ['userid', 'tags', 'name', 'description', 'categoryid', 'image', 'published', 'published_at', 'use_unpublish_date', 'unpublish_at', 'customfield1', 'customfield', 'additionalCustomFields'];
+    protected $editable = [ 'name', 'description', 'published'];
+
+    protected $obtained = ['adtag','categoryid', 'created_at', 'duration', 'episode', 'externalvideoid', 'mediafiles', 'noads', 'published_at', 'siteid', 'use_unpublish_date', 'unpublished_at', 'state',  'tags', 'updated_at', 'userid', 'views' ];
 
 
-    public function beforeSave(bool $isNew): bool
+    public function ___beforeSave(bool $isNew): bool
     {
-        dd($this);
     }
 
     /**
@@ -117,8 +118,8 @@ class FlowplayerDriveVideoElement extends Element
         parent::afterSave($isNew);
     }
 
-    public function fill($videoInfo){
-        // todo: automatic with fillablee
+    public function fillFromAPI($videoInfo){
+        // todo: automatic with fillable
         $this->video_id = $videoInfo->id;
         $this->name = $videoInfo->name;
         $this->description = $videoInfo->description;
@@ -142,6 +143,22 @@ class FlowplayerDriveVideoElement extends Element
         $this->tags = $videoInfo->tags;
         $this->updated_at = $videoInfo->updated_at;
         $this->userid = $videoInfo->userid;
+    }
+
+    public function updateFromAPI($videoInfo){
+        foreach ($this->obtained as $key) {
+            $this->$key = $videoInfo->$key;
+        }
+
+        $this->thumbnail_url = $videoInfo->images->thumbnail_url;
+        $this->normal_image_url = $videoInfo->images->normal_image_url;
+
+        foreach ($this->editable as $key) {
+            $this->$key = $videoInfo->$key;;
+        }
+
+        Craft::$app->elements->saveElement($this);
+
     }
 
     /**
@@ -214,6 +231,7 @@ class FlowplayerDriveVideoElement extends Element
 	        'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum'),
             'likes' => \Craft::t('craft-flowplayer-drive', 'Likes'),
             'dislikes' => \Craft::t('craft-flowplayer-drive', 'Dislikes'),
+            'video_id' => \Craft::t('craft-flowplayer-drive', 'Video-ID'),
 	    ];
 	}
 

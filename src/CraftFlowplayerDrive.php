@@ -150,6 +150,34 @@ class CraftFlowplayerDrive extends Plugin
             ];
         });
 
+        Event::on(
+        UrlManager::class,
+        UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+        function(RegisterUrlRulesEvent $event) {
+            // easy route for demonstration
+            $event->rules[] = [
+                'pattern' => '/admin/craft-flowplayer-drive/clear',
+                'route'   => 'craft-flowplayer-drive/videolist/clear'
+            ];
+        });
+
+        Event::on(
+            UrlManager::class, 
+            UrlManager::EVENT_REGISTER_CP_URL_RULES, 
+            function(RegisterUrlRulesEvent $e) {
+                $e->rules['craft-flowplayer-drive/clear'] = 'craft-flowplayer-drive/videolist/clear';
+            }
+        );
+
+        Event::on(
+            UrlManager::class, 
+            UrlManager::EVENT_REGISTER_CP_URL_RULES, 
+            function(RegisterUrlRulesEvent $e) {
+                $e->rules['craft-flowplayer-drive/refresh'] = 'craft-flowplayer-drive/videolist/refresh';
+            }
+        );
+
+
 		/**
 		 * Logging in Craft involves using one of the following methods:
 		 *

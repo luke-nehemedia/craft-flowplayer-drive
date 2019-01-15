@@ -69,6 +69,12 @@ class FlowplayerDriveVideoElementQuery extends ElementQuery
         return $this;
     }
 
+    public function video_id($value){
+        $this->video_id = $value;
+
+        return $this;
+    }
+
 
     protected function beforePrepare(): bool
     {
@@ -78,6 +84,7 @@ class FlowplayerDriveVideoElementQuery extends ElementQuery
         // select the price column
         $this->query->select([
             'craftflowplayerdrive.name',
+            'craftflowplayerdrive.video_id',
             'craftflowplayerdrive.description',
             'craftflowplayerdrive.published',
             'craftflowplayerdrive.state',
@@ -89,6 +96,10 @@ class FlowplayerDriveVideoElementQuery extends ElementQuery
 
         if ($this->name) {
             $this->subQuery->andWhere(Db::parseParam('craftflowplayerdrive.name', $this->name));
+        }
+
+        if ($this->video_id) {
+            $this->subQuery->andWhere(Db::parseParam('craftflowplayerdrive.video_id', $this->video_id));
         }
 
         if ($this->description) {

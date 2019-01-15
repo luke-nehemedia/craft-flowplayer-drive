@@ -1,3 +1,11 @@
 {% extends '_layouts/elementindex' %}
 {% set title = 'Flowplayer Drive' %}
+
+{% block actionButton %}
+<div class="buttons">
+	<a class="btn submit refresh icon" data-icon="refresh" href="{{url('craft-flowplayer-drive/refresh')}}">Refresh</a>
+	<a class="btn submit upload icon" data-icon="upload" href="{{url('craft-flowplayer-drive/new')}}">New Video</a>
+</div>
+{% endblock %}
+
 {% set elementType = 'lucasbares\\craftflowplayerdrive\\elements\\FlowplayerDriveVideoElement' %}
