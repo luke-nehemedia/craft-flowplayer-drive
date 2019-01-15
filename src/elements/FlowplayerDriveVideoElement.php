@@ -56,6 +56,7 @@ class FlowplayerDriveVideoElement extends Element
 
     public function beforeSave(bool $isNew): bool
     {
+
         // Type convert to bool
         if($this->published == '1' or $this->published == 1){
             $this->published = true;
@@ -63,8 +64,10 @@ class FlowplayerDriveVideoElement extends Element
             $this->published = false;
         }
         
-        // Save to API
-        return $this->service->updateVideoElement($this);
+        if(!$isNew){
+            // Save to API
+            return $this->service->updateVideoElement($this);
+        }
     }
 
     /**
@@ -113,7 +116,6 @@ class FlowplayerDriveVideoElement extends Element
                     'description' => $this->description,
                     'published' => $this->published,
                     'views' => $this->views,
-
                     'adtag' => $this->adtag,
                     'categoryid' =>  $this->categoryid,
                     'created_at' => $this->created_at,
@@ -339,7 +341,7 @@ class FlowplayerDriveVideoElement extends Element
                 'siteId' => $this->siteId,
                 'id' => 'published',
                 'name' => 'published',
-                'value' => $this->published,
+                'value' => true,
                 'on' => $this->published,
                 'errors' => $this->getErrors('published'),
                 'first' => false,
