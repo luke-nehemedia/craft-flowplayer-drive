@@ -219,15 +219,17 @@ class FlowplayerDriveVideoElement extends Element
 	            'key' => 'public',
 	            'label' => 'Öffentlich',
 	            'criteria' => [
-	                'published' => true,
-	            ]
+	                'published' => 1
+	            ],
+                'hasThumbs' => true
 	        ],
 	        [
 	            'key' => 'private',
 	            'label' => 'Privat',
 	            'criteria' => [
-	                'published' => false,
-	            ]
+	                'published' => 'not 1'
+	            ],
+                'hasThumbs' => true
 	        ],
 	    ];
 	}
@@ -268,16 +270,17 @@ class FlowplayerDriveVideoElement extends Element
    		return ['name', 'description'];
 	}
 
-    protected function tableAttributeHtml(string $attribute): string
-    {
-        switch ($attribute) {
-            case 'published':
-                return ($attribute == 1) ?  'true' :  'false';
+    // protected function tableAttributeHtml(string $attribute): string
+    // {
+    //     switch ($attribute) {
+    //         case 'published':
+    //             return var_export($attribute,1);
+    //             //return ($attribute == 1) ?  'ja' :  'nein';
 
-        }
+    //     }
 
-        return parent::tableAttributeHtml($attribute);
-    }
+    //     return parent::tableAttributeHtml($attribute);
+    // }
 
 
 
