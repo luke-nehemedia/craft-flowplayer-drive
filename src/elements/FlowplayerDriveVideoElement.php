@@ -4,6 +4,7 @@ namespace lucasbares\craftflowplayerdrive\elements;
 use craft\base\Element;
 use Craft;
 use lucasbares\craftflowplayerdrive\elements\db\FlowplayerDriveVideoElementQuery;
+use lucasbares\craftflowplayerdrive\elements\actions\DeleteVideo;
 use lucasbares\craftflowplayerdrive\services\FlowplayerDriveService;
 use craft\elements\db\ElementQueryInterface;
 use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
@@ -70,6 +71,8 @@ class FlowplayerDriveVideoElement extends Element
      */
     public function init(){
         $this->service = CraftFlowplayerDrive::getInstance()->flowplayerDriveService;
+
+        parent::init();
     }
 
     /**
@@ -80,6 +83,8 @@ class FlowplayerDriveVideoElement extends Element
      */
     public function beforeSave(bool $isNew): bool
     {
+        parent::beforeSave($isNew);
+
         // Type convert to bool (for API call)
         if($this->published == '1' or $this->published == 1){
             $this->published = true;
@@ -91,6 +96,8 @@ class FlowplayerDriveVideoElement extends Element
         if(!$isNew){
             return $this->service->updateVideoElement($this);
         }
+
+        return true;
     }
 
     /**
@@ -181,6 +188,9 @@ class FlowplayerDriveVideoElement extends Element
         foreach ($this->obtainable as $key) {
             $this->$key = $videoInfo->$key;
         }
+
+        $this->thumbnail_url = $videoInfo->images->thumbnail_url;
+        $this->normal_image_url = $videoInfo->images->normal_image_url;
     }
 
     /**
@@ -278,6 +288,19 @@ class FlowplayerDriveVideoElement extends Element
 	        ],
 	    ];
 	}
+
+     /**
+     * @inheritdoc
+     */
+    protected static function defineActions(string $source = null): array
+    {
+        $actions = [];
+
+        $actions[] = DeleteVideo::class;
+
+        return $actions;
+
+    }
 
 	protected static function defineSortOptions(): array
 	{

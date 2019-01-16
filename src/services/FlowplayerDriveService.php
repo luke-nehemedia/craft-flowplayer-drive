@@ -19,6 +19,8 @@ use craft\base\Component;
 use GuzzleHttp\Client as Client;
 use GuzzleHttp\Psr7\Request;
 
+use yii\base\Exception;
+
 /**
  * FlowplayerDriveService Service
  *
@@ -216,5 +218,32 @@ class FlowplayerDriveService extends Component
         }
 
         return $result;
+    }
+
+    public function deleteVideoElement($videoElement)
+    {
+    	$uri = 'https://api.flowplayer.com/ovp/web/video/delete/video.json';
+
+		$requestBody = [
+			'api_key'	=> 	$this->settings->apiKey,
+			'siteid'	=>	$this->settings->siteId,
+			'userid'	=>	$this->settings->userId,
+			'id'		=>	$videoElement->video_id,
+		];
+
+		$options = [
+		    'json' => $requestBody,
+		   ]; 
+
+		// send request
+		$response = $this->client->delete($uri, $options);
+
+		if($response->getStatusCode() != 200){
+			Craft::$app->getSession()->setError('Error saving video details: '.$response->getReasonPhrase());
+			throw new Exception('Error saving video details: '.$response->getReasonPhrase());
+			return false;
+		}
+
+		return true;
     }
 }

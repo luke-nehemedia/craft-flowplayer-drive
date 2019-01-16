@@ -45,7 +45,8 @@ class VideolistController extends Controller
 				$updated++;
 			// If new, create new
 			}else{
-				$newVideo = new FlowplayerDriveVideoElement();
+				//$newVideo = new FlowplayerDriveVideoElement();
+				$newVideo = Craft::$app->elements->createElement('lucasbares\craftflowplayerdrive\elements\FlowplayerDriveVideoElement');
 				$newVideo->fillFromAPI($video);
 				Craft::$app->elements->saveElement($newVideo);
 				$new++;
