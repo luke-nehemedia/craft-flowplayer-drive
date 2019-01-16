@@ -21,7 +21,7 @@ use yii\web\Response;
 
 class VideoController extends Controller
 {
-
+    
 	protected $service;
 
 	public function init(){

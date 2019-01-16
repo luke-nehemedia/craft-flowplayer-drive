@@ -14,17 +14,12 @@ use lucasbares\craftflowplayerdrive\services\FlowplayerDriveService;
 use lucasbares\craftflowplayerdrive\variables\CraftFlowplayerDriveVariable;
 use lucasbares\craftflowplayerdrive\models\Settings;
 use lucasbares\craftflowplayerdrive\fields\VideoField as VideoFieldField;
-use lucasbares\craftflowplayerdrive\elements\FlowplayerDriveVideoElement;
-use lucasbares\craftflowplayerdrive\elements\db\FlowplayerDriveVideoElementQuery;
-
-
 use Craft;
 use craft\base\Plugin;
 use craft\services\Plugins;
 use craft\events\PluginEvent;
 use craft\services\Fields;
 use craft\web\twig\variables\CraftVariable;
-use craft\web\twig\variables\Cp;
 use craft\events\RegisterComponentTypesEvent;
 use craft\web\UrlManager;
 use yii\base\Event;
@@ -44,7 +39,7 @@ use craft\events\RegisterUrlRulesEvent;
  * @package   CraftFlowplayerDrive
  * @since     1.0.0
  *
- * @property  CraftFlowplayerDriveServiceService $craftFlowplayerDriveService
+ * @property  FlowplayerDriveService $flowplayerDriveService
  * @property  Settings $settings
  * @method    Settings getSettings()
  */
@@ -71,12 +66,12 @@ class CraftFlowplayerDrive extends Plugin
      */
     public $schemaVersion = '0.0.5-dev';
 
-	/**
+    /**
      * Whether there is a settings page
      *
      * @var boolean
      */
-	public $hasCpSettings = true;
+    public $hasCpSettings = true;
 
     /**
      * @var bool Whether the plugin has its own section in the CP
@@ -103,7 +98,7 @@ class CraftFlowplayerDrive extends Plugin
         parent::init();
         self::$plugin = $this;
 
-        //Register our fields
+        //Register fields
         Event::on(
             Fields::class,
             Fields::EVENT_REGISTER_FIELD_TYPES,
@@ -112,7 +107,7 @@ class CraftFlowplayerDrive extends Plugin
             }
         );
 
-        //Register our variables
+        //Register variables
         Event::on(
             CraftVariable::class,
             CraftVariable::EVENT_INIT,
@@ -123,6 +118,7 @@ class CraftFlowplayerDrive extends Plugin
             }
         );
 
+        // Register services
         $this->setComponents([
             'flowplayerDriveService' => FlowplayerDriveService::class,
         ]);
@@ -173,24 +169,24 @@ class CraftFlowplayerDrive extends Plugin
         );
 
 
-		/**
-		 * Logging in Craft involves using one of the following methods:
-		 *
-		 * Craft::trace(): record a message to trace how a piece of code runs. This is mainly for development use.
-		 * Craft::info(): record a message that conveys some useful information.
-		 * Craft::warning(): record a warning message that indicates something unexpected has happened.
-		 * Craft::error(): record a fatal error that should be investigated as soon as possible.
-		 *
-		 * Unless `devMode` is on, only Craft::warning() & Craft::error() will log to `craft/storage/logs/web.log`
-		 *
-		 * It's recommended that you pass in the magic constant `__METHOD__` as the second parameter, which sets
-		 * the category to the method (prefixed with the fully qualified class name) where the constant appears.
-		 *
-		 * To enable the Yii debug toolbar, go to your user account in the AdminCP and check the
-		 * [] Show the debug toolbar on the front end & [] Show the debug toolbar on the Control Panel
-		 *
-		 * http://www.yiiframework.com/doc-2.0/guide-runtime-logging.html
-		 */
+        /**
+         * Logging in Craft involves using one of the following methods:
+         *
+         * Craft::trace(): record a message to trace how a piece of code runs. This is mainly for development use.
+         * Craft::info(): record a message that conveys some useful information.
+         * Craft::warning(): record a warning message that indicates something unexpected has happened.
+         * Craft::error(): record a fatal error that should be investigated as soon as possible.
+         *
+         * Unless `devMode` is on, only Craft::warning() & Craft::error() will log to `craft/storage/logs/web.log`
+         *
+         * It's recommended that you pass in the magic constant `__METHOD__` as the second parameter, which sets
+         * the category to the method (prefixed with the fully qualified class name) where the constant appears.
+         *
+         * To enable the Yii debug toolbar, go to your user account in the AdminCP and check the
+         * [] Show the debug toolbar on the front end & [] Show the debug toolbar on the Control Panel
+         *
+         * http://www.yiiframework.com/doc-2.0/guide-runtime-logging.html
+         */
         Craft::info(
             Craft::t(
                 'craft-flowplayer-drive',
@@ -199,22 +195,6 @@ class CraftFlowplayerDrive extends Plugin
             ),
             __METHOD__
         );
-
-        //$videos =  $this->flowplayerDriveService->listVideos();
-
-        // foreach($videos as $video){
-        //     // search
-        //   //  if(true){
-                 //$element = FlowplayerDriveVideoElement::find()->one();
-        //         $element->fill($video);
-        //         Craft::$app->elements->saveElement($element);
-
-        //dd($element);
-        //     //}
-
-
-
-        // }
     }
 
 
@@ -237,6 +217,8 @@ class CraftFlowplayerDrive extends Plugin
      * block on the settings page.
      *
      * @return string The rendered settings HTML
+     * @throws \Twig_Error_Loader
+     * @throws \yii\base\Exception
      */
     protected function settingsHtml(): string
     {
@@ -248,17 +230,18 @@ class CraftFlowplayerDrive extends Plugin
         );
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getCpNavItem()
     {
         $item = parent::getCpNavItem();
-        //$item['badgeCount'] = 0;
         $item['subnav'] = [
             'index' => ['label' => 'Übersicht', 'url' => 'craft-flowplayer-drive/index'],
             'create' => ['label' => 'Neues Video', 'url' => 'craft-flowplayer-drive/create'],
             'settings' => ['label' => 'Einstellungen', 'url' => 'craft-flowplayer-drive/settings'],
         ];
         $item['label'] = 'Flowplayer Drive';
-        //$item['url'] = 'craft-flowplayer-drive';
         return $item;
     }
 }
