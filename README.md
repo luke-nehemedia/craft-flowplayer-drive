@@ -41,3 +41,14 @@ Some things to do, and ideas for potential features:
 * Release it
 
 Brought to you by [Lucas Bares](http://luke.nehemedia.de)
+
+
+
+
+Functions:
+
+- Show videos in flowplayer drive
+- Edit name, description, published status
+- Delete videos from flowplayer drive
+- Upload new videos with name, description, published status
+

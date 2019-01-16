@@ -138,8 +138,8 @@ class CraftFlowplayerDrive extends Plugin
             }
         );
 
-        // register the actions
 
+        // register the urls
         Event::on(
             UrlManager::class, 
             UrlManager::EVENT_REGISTER_CP_URL_RULES, 
@@ -171,6 +171,7 @@ class CraftFlowplayerDrive extends Plugin
                 $e->rules['craft-flowplayer-drive/store'] = 'craft-flowplayer-drive/video/store';
             }
         );
+
 
 		/**
 		 * Logging in Craft involves using one of the following methods:
