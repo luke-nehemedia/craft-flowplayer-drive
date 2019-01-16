@@ -139,27 +139,6 @@ class CraftFlowplayerDrive extends Plugin
         );
 
         // register the actions
-        Event::on(
-        UrlManager::class,
-        UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-        function(RegisterUrlRulesEvent $event) {
-            // easy route for demonstration
-            $event->rules[] = [
-                'pattern' => '/some-nice-url',
-                'route'   => 'craft-flowplayer-drive/videolist/refresh'
-            ];
-        });
-
-        Event::on(
-        UrlManager::class,
-        UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-        function(RegisterUrlRulesEvent $event) {
-            // easy route for demonstration
-            $event->rules[] = [
-                'pattern' => '/admin/craft-flowplayer-drive/clear',
-                'route'   => 'craft-flowplayer-drive/videolist/clear'
-            ];
-        });
 
         Event::on(
             UrlManager::class, 
@@ -177,6 +156,21 @@ class CraftFlowplayerDrive extends Plugin
             }
         );
 
+        Event::on(
+            UrlManager::class, 
+            UrlManager::EVENT_REGISTER_CP_URL_RULES, 
+            function(RegisterUrlRulesEvent $e) {
+                $e->rules['craft-flowplayer-drive/create'] = 'craft-flowplayer-drive/video/edit';
+            }
+        );
+
+        Event::on(
+            UrlManager::class, 
+            UrlManager::EVENT_REGISTER_CP_URL_RULES, 
+            function(RegisterUrlRulesEvent $e) {
+                $e->rules['craft-flowplayer-drive/store'] = 'craft-flowplayer-drive/video/store';
+            }
+        );
 
 		/**
 		 * Logging in Craft involves using one of the following methods:
@@ -256,14 +250,14 @@ class CraftFlowplayerDrive extends Plugin
     public function getCpNavItem()
     {
         $item = parent::getCpNavItem();
-        $item['badgeCount'] = 5;
-        // $item['subnav'] = [
-        //     'index' => ['label' => 'Übersicht', 'url' => 'flowplayerdrive/index'],
-        //     'createe' => ['label' => 'Neues Video', 'url' => 'flowplayerdrive/create'],
-        //     'settings' => ['label' => 'Einstellungen', 'url' => 'flowplayerdrive/settings'],
-        // ];
-        //$item['label'] = 'Flowplayer Drive';
-        //$item['url'] = 'flowplayerdrive';
+        //$item['badgeCount'] = 0;
+        $item['subnav'] = [
+            'index' => ['label' => 'Übersicht', 'url' => 'craft-flowplayer-drive/index'],
+            'create' => ['label' => 'Neues Video', 'url' => 'craft-flowplayer-drive/create'],
+            'settings' => ['label' => 'Einstellungen', 'url' => 'craft-flowplayer-drive/settings'],
+        ];
+        $item['label'] = 'Flowplayer Drive';
+        //$item['url'] = 'craft-flowplayer-drive';
         return $item;
     }
 }

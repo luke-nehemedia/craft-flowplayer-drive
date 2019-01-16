@@ -1,0 +1,161 @@
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+
+{% set fullPageForm = true %}
+{% set saveShortcutRedirect = continueEditingUrl %}
+
+
+{% set isNewVideo = video.id ? false : true %}
+{% set selectedSubnavItem = isNewVideo ? 'create' : 'edit'  %}
+
+
+{% hook "cp.craft-flowplayer-drive.edit" %}
+
+{% block header %}
+    {{ block('pageTitle') }}
+    {{ block('contextMenu') }}
+    <div class="flex-grow"></div>
+    {% if showPreviewBtn or shareUrl is defined %}
+        {% if showPreviewBtn %}
+            <div class="btn livepreviewbtn">{{ "Live Preview"|t('app') }}</div>
+        {% endif %}
+        {% if shareUrl is defined %}
+            <a href="{{ shareUrl }}" class="btn sharebtn" rel="noopener" target="_blank">{{ 'Share'|t('app') }}</a>
+        {% endif %}
+        <div class="flex-grow"></div>
+    {% endif %}
+    {{ block('actionButton') }}
+{% endblock %}
+
+
+{% block actionButton %}
+    <div class="btngroup">
+        <input type="submit" class="btn submit" value="{{ 'Save'|t('app') }}">
+
+        <div class="btn submit menubtn"></div>
+        <div class="menu">
+            <ul>
+                <li><a class="formsubmit" data-redirect="{{ continueEditingUrl|hash }}">
+                        {{ forms.optionShortcutLabel('S') }}
+                        {{ "Save and continue editing"|t('app') }}
+                    </a></li>
+                <li><a class="formsubmit" data-redirect="{{ (nextCategoryUrl~'?parentId={parent.id}#')|hash }}">{{ "Save and add another"|t('app') }}</a></li>
+
+                {% if not isNewVideo %}
+                    <li><a class="formsubmit" data-param="duplicate" data-value="1" data-redirect="{{ (continueEditingUrl~'#')|hash }}">{{ "Save as a new category"|t('app') }}</a></li>
+                {% endif %}
+            </ul>
+            {% if not isNewVideo %}
+                <hr>
+                <ul>
+                    <li><a class="formsubmit error" data-action="categories/delete-category" data-confirm="{{ 'Are you sure you want to delete this category?'|t('app') }}" data-redirect="{{ 'categories#'|hash }}">{{ 'Delete'|t('app') }}</a></li>
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <input type="hidden" name="action" value="craft-flowplayer-drive/video/store">
+    {{ redirectInput('craft-flowplayer-drive/') }}
+
+    {% if video.id %}<input type="hidden" name="videoId" value="{{ video.id }}">{% endif %}
+    {% if craft.app.getIsMultiSite() %}<input type="hidden" name="siteId" value="{{ category.siteId }}">{% endif %}
+
+    <div id="fields">
+        {{ forms.textField({
+            label: "Name"|t('app'),
+            siteId: video.siteId,
+            id: 'name',
+            name: 'name',
+            value: video.name,
+            errors: video.getErrors('name'),
+            first: true,
+            autofocus: true,
+            required: false,
+            maxlength: 255
+        }) }}
+
+
+        <div class="field first" id="description-field" data-cpfieldlinks="true">
+            <div class="heading">
+                <label id="description-label" class="required" for="description">Description</label>
+            </div>
+            <div class="input ltr">
+            {{ forms.textArea({
+                label: "Description"|t('craft-flowplayer-drive'),
+                siteId: video.siteId,
+                id: 'description',
+                name: 'description',
+                value: video.description,
+                errors: video.getErrors('description'),
+                first: false,
+                autofocus: true,
+                required: false,
+                maxlength: 255,
+                rows: 4,
+            }) }}
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="heading">
+                <label id="published-label" for="published">Veröffentlicht</label>
+            </div>
+            <div class="input ltr">
+                {{ forms.lightswitch({
+                    label: 'Veröffentlicht'|t('craft-flowplayer-drive'),
+                    siteId: video.siteId,
+                    id: 'published',
+                    name: 'published',
+                    value: true,
+                    on: video.published,
+                    errors:  video.getErrors('published'),
+                    first: false,
+                    autofocus: false,
+                    required: false,
+                }) }}
+            </div>
+        </div>
+
+
+        {{ forms.elementSelectField({
+            label: "Video File"|t('app'),
+            id: 'asset', 
+            name: 'asset',
+            elementType: 'craft\\elements\\Asset',
+            selectionLabel: "Choose"|t('app'),
+            elements: [], 
+            criteria: {"kind":['video']},
+         }) }}
+
+    </div>
+
+    {# Give plugins a chance to add other things here #}
+    {% hook "cp.craft-flowplayer-drive.edit.content" %}
+{% endblock %}
+
+{% block details %}
+    <div id="settings" class="meta">
+
+  
+
+    </div>
+
+    {% if video.id %}
+        <div class="meta read-only">
+            <div class="data">
+                <h5 class="heading">{{ "Date Created"|t('app') }}</h5>
+                <div class="value">{{ video.dateCreated|datetime('short') }}</div>
+            </div>
+            <div class="data">
+                <h5 class="heading">{{ "Date Updated"|t('app') }}</h5>
+                <div class="value">{{ video.dateUpdated|datetime('short') }}</div>
+            </div>
+        </div>
+    {% endif %}
+
+    {# Give plugins a chance to add other stuff here #}
+    {% hook "cp.craft-flowplayer-drive.edit.details" %}
+{% endblock %}

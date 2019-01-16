@@ -246,4 +246,42 @@ class FlowplayerDriveService extends Component
 
 		return true;
     }
+
+    public function createVideoElement(FlowplayerDriveVideoElement $videoElement,$videoUrl){
+    	$uri = 'https://api.flowplayer.com/ovp/web/video/v2/create.json';
+
+    	$requestBody = [
+			'api_key'	=> 	$this->settings->apiKey,
+			'siteid'	=>	$this->settings->siteId,
+			'userid'	=>	$this->settings->userId,
+			'input'		=>	$videoUrl,
+		];
+
+		foreach ($videoElement->editable as $key) {
+			if(!empty($videoElement->$key)){
+				$requestBody[$key] = $videoElement->$key;
+			}
+		}
+
+		$options = [
+		    'json' => $requestBody,
+		   ]; 
+
+		// send request
+		$response = $this->client->post($uri, $options);
+
+		if($response->getStatusCode() != 200){
+			Craft::$app->getSession()->setError('Error saving video details: '.$response->getReasonPhrase());
+			throw new Exception('Error saving video details: '.$response->getReasonPhrase());
+			return false;
+		}
+
+		// update local object
+		$responseObj = json_decode($response->getBody());
+		$videoElement->fillFromAPI($responseObj);
+
+		return $videoElement;
+
+
+    }
 }
