@@ -15,18 +15,14 @@
 
 {% import "_includes/forms" as forms %}
 
-{% do view.registerAssetBundle("lucasbares\\craftflowplayerdrive\\assetbundles\\craftflowplayerdrive\\CraftFlowplayerDriveAsset") %}
-
-<h2>Videofeld Optionen</h2>
-
-<h4>Nur veröffentlichte Videos anzeigen</h4>
-<p>Zeige nur veröffentlichte Videos an.</p>
+<h4>{{ 'Display only published videos'|t('craft-flowplayer-drive') }}</h4>
+<p>{{ 'Private or unpublished videos will not be selectable'|t('craft-flowplayer-drive') }}</p>
 {{ forms.lightswitch({
-    label: 'Nur veröffentlichte Videos',
-    instructions: 'Zeige nur veröffentlichte Videos an.',
+    label: 'Display only published videos'|t('craft-flowplayer-drive'),
+    instructions:  'Private or unpublished videos will not be selectable'|t('craft-flowplayer-drive'),
     id: 'published',
     name: 'published',
-	on: field['published']})
+    on: field['published']})
 }}
 
 {%- if field.getErrors('published') %}
@@ -37,11 +33,11 @@
     </ul>
 {%- endif %}
 
-<h4>Begrenzung</h4>
-<p><label>Die Anzahl der auswählbaren Videos begrenzen.</label></p>
+<h4>{{ 'Limit'|t('craft-flowplayer-drive') }}</h4>
+<p><label>{{ 'Limit the number of selectable videos'|t('craft-flowplayer-drive') }}</label></p>
 {{ forms.text({
-    label: 'Begrenzung',
-    instructions: 'Die Anzahl der auswählbaren Videos begrenzen.',
+    label: 'Limit'|t('craft-flowplayer-drive'),
+    instructions: 'Limit the number of selectable videos'|t('craft-flowplayer-drive'),
     id: 'limit',
     name: 'limit',
     size: 3,

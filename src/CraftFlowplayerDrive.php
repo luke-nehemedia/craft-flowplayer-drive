@@ -16,8 +16,6 @@ use lucasbares\craftflowplayerdrive\variables\FlowplayerDriveVariable;
 use lucasbares\craftflowplayerdrive\models\Settings;
 use Craft;
 use craft\base\Plugin;
-use craft\services\Plugins;
-use craft\events\PluginEvent;
 use craft\services\Fields;
 use craft\web\twig\variables\CraftVariable;
 use craft\events\RegisterComponentTypesEvent;
@@ -122,6 +120,14 @@ class CraftFlowplayerDrive extends Plugin
             UrlManager::EVENT_REGISTER_CP_URL_RULES, 
             function(RegisterUrlRulesEvent $e) {
                 $e->rules['craft-flowplayer-drive/refresh'] = 'craft-flowplayer-drive/videolist/refresh';
+            }
+        );
+
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            function(RegisterUrlRulesEvent $e) {
+                $e->rules['craft-flowplayer-drive/refresh-index'] = 'craft-flowplayer-drive/videolist/refresh-index';
             }
         );
 

@@ -2,7 +2,7 @@
 /**
  * Craft Flowplayer Drive plugin for Craft CMS 3.x
  *
- * This plugin includes Flowplayer Drive into craftcms.
+ * This plugin includes Flowplayer Drive into Craftcms.
  *
  * @link      http://luke.nehemedia.de
  * @copyright Copyright (c) 2018 Lucas Bares
@@ -10,9 +10,6 @@
 
 namespace lucasbares\craftflowplayerdrive\models;
 
-use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
-
-use Craft;
 use craft\base\Model;
 
 /**
@@ -63,12 +60,6 @@ class Settings extends Model
      */
     public $defaultPlayerId = 'abc000de-0000-0a0b-00ab-abc0d000000';
 
-    /**
-     * Refresh-Interval
-     *
-     */
-    public $refreshInterval = 60*60*12; // 12h
-
 
     // Public Methods
     // =========================================================================
@@ -86,9 +77,8 @@ class Settings extends Model
     public function rules()
     {
         return [
-            [['siteId', 'apiKey','userId'], 'string'],
+            [['siteId', 'apiKey','userId','defaultPlayerId'], 'string'],
             [['siteId', 'apiKey'], 'required'],
-            [['refreshInterval'], 'integer'],
         ];
     }
 }

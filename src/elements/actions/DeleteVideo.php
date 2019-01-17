@@ -2,7 +2,7 @@
 /**
  * Craft Flowplayer Drive plugin for Craft CMS 3.x
  *
- * This plugin includes Flowplayer Drive into craftcms.
+ * This plugin includes Flowplayer Drive into Craftcms.
  *
  * @link      http://luke.nehemedia.de
  * @copyright Copyright (c) 2018 Lucas Bares
@@ -11,8 +11,6 @@ namespace lucasbares\craftflowplayerdrive\elements\actions;
 
 use Craft;
 use craft\base\ElementAction;
-//use lucasbares\craftflowplayerdrive\elements\db\FlowplayerDriveVideoElementQuery;
-use lucasbares\craftflowplayerdrive\services\FlowplayerDriveService;
 use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 use craft\elements\db\ElementQueryInterface;
 use yii\base\Exception;
@@ -21,7 +19,7 @@ use yii\base\Exception;
  * DeleteVideo represents a Delete Video element action.
  *
  * @author    Lucas Bares
- * @package   CraftFlowplayerDrive
+ * @package   lucasbares\craftflowplayerdrive\elements\actions
  * @since     1.0.0
  */
 class DeleteVideo extends ElementAction
@@ -54,7 +52,11 @@ class DeleteVideo extends ElementAction
     }
 
     /**
-     * @inheritdoc
+     * Delete video via API, and then from the Database
+     *
+     * @param ElementQueryInterface $query
+     * @return bool
+     * @throws \Throwable
      */
     public function performAction(ElementQueryInterface $query): bool
     {
@@ -69,7 +71,7 @@ class DeleteVideo extends ElementAction
             return false;
         }
 
-        $this->setMessage(Craft::t('craft-flowplayer-drive', 'Video deleted.'));
+        $this->setMessage(Craft::t('craft-flowplayer-drive', 'Videos successfully deleted.'));
 
         return true;
     }

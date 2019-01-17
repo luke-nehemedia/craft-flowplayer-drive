@@ -11,16 +11,14 @@
 namespace lucasbares\craftflowplayerdrive\variables;
 
 use Craft;
+use lucasbares\craftflowplayerdrive\elements\FlowplayerDriveVideoElement;
 use Twig_Markup;
 use craft\web\View;
 
 /**
  * Craft Flowplayer Drive Variable
  *
- * Craft allows plugins to provide their own template variables, accessible from
- * the {{ craft }} global variable (e.g. {{ craft.craftFlowplayerDrive }}).
- *
- * https://craftcms.com/docs/plugins/variables
+ * Simple variable that provides a getPlayer function to twig
  *
  * @author    Lucas Bares
  * @package   CraftFlowplayerDrive
@@ -32,29 +30,14 @@ class FlowplayerDriveVariable
     // =========================================================================
 
     /**
-     * Whatever you want to output to a Twig template can go into a Variable method.
-     * You can have as many variable functions as you want.  From any Twig template,
-     * call it like this:
+     * Returns a videos embed code.
      *
-     *     {{ craft.craftFlowplayerDrive.exampleVariable }}
-     *
-     * Or, if your variable requires parameters from Twig:
-     *
-     *     {{ craft.craftFlowplayerDrive.exampleVariable(twigValue) }}
-     *
-     * @param null $optional
-     * @return string
+     * @param $entry
+     * @return Twig_Markup
+     * @throws \Twig_Error_Loader
+     * @throws \yii\base\Exception
      */
-    public function exampleVariable($optional = null)
-    {
-        $result = "And away we go to the Twig template...";
-        if ($optional) {
-            $result = "I'm feeling optional today...";
-        }
-        return $result;
-    }
-
-    public function getPlayer($entry){
+    public function getPlayer(FlowplayerDriveVideoElement $entry){
         $settings = Craft::$app->getPlugins()->getPlugin('craft-flowplayer-drive')->getSettings();
 
         // Render template

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Craft Flowplayer Drive plugin for Craft CMS 3.x
+ *
+ * This plugin includes Flowplayer Drive into craftcms.
+ *
+ * @link      http://luke.nehemedia.de
+ * @copyright Copyright (c) 2018 Lucas Bares
+ */
 
 namespace lucasbares\craftflowplayerdrive\migrations;
 
@@ -7,6 +15,10 @@ use craft\db\Migration;
 
 /**
  * Install migration.
+ *
+ * @author    Lucas Bares
+ * @package   CraftFlowplayerDrive
+ * @since     1.0.0
  */
 class Install extends Migration
 {

@@ -17,8 +17,8 @@
 
 
 <div class="buttons">
-    <a class="btn submit refresh icon" data-icon="refresh" href="{{url('craft-flowplayer-drive/refresh')}}">Refresh Videolist</a>
-    <a class="btn submit delete icon" data-icon="delete" href="{{url('craft-flowplayer-drive/clear')}}">Clear Videolist</a>
+    <a class="btn submit refresh icon" data-icon="refresh" href="{{url('craft-flowplayer-drive/refresh')}}">{{ 'Refresh Videolist'|t('craft-flowplayer-drive') }}</a>
+    <a class="btn submit delete icon" data-icon="delete" href="{{url('craft-flowplayer-drive/clear')}}">{{ 'Clear Videolist'|t('craft-flowplayer-drive') }}</a>
 </div>
 
 
@@ -26,27 +26,29 @@
 
 {{ forms.textField({
     first: true,
-    label: 'setting-siteId-label'|t('craft-flowplayerdrive'),
-    instructions: 'setting-siteId-instructions'|t('craft-flowplayerdrive'),
+    label: 'Site-ID'|t('craft-flowplayer-drive'),
+    instructions: 'Site-ID-instructions'|t('craft-flowplayer-drive'),
     id: 'siteId',
     name: 'siteId',
+    required: true,
     value: settings.siteId})
 }}
 
 {{ forms.textField({
     first: false,
-    label: 'setting-apiKey-label'|t('craft-flowplayerdrive'),
-    instructions: 'setting-apiKey-instructions'|t('craft-flowplayerdrive'),
+    label: 'API-Key'|t('craft-flowplayer-drive'),
+    instructions: 'API-Key-instructions'|t('craft-flowplayer-drive'),
     id: 'apiKey',
     name: 'apiKey',
+    required: true,
     value: settings.apiKey})
 }}
 
 
 {{ forms.textField({
     first: false,
-    label: 'setting-userId-label'|t('craft-flowplayerdrive'),
-    instructions: 'setting-userId-instructions'|t('craft-flowplayerdrive'),
+    label: 'User-ID'|t('craft-flowplayer-drive'),
+    instructions: 'User-ID-instructions'|t('craft-flowplayer-drive'),
     id: 'userId',
     name: 'userId',
     value: settings.userId})
@@ -55,20 +57,11 @@
 
 {{ forms.textField({
     first: false,
-    label: 'setting-defaultPlayerId-label'|t('craft-flowplayerdrive'),
-    instructions: 'setting-defaultPlayerId-instructions'|t('craft-flowplayerdrive'),
+    label: 'Default Player-ID'|t('craft-flowplayer-drive'),
+    instructions: 'Default Player-ID-instructions'|t('craft-flowplayer-drive'),
     id: 'defaultPlayerId',
     name: 'defaultPlayerId',
     value: settings.defaultPlayerId})
-}}
-
-{{ forms.textField({
-    first: false,
-    label: 'setting-refreshInterval-label'|t('craft-flowplayerdrive'),
-    instructions: 'setting-refreshInterval-instructions'|t('craft-flowplayerdrive'),
-    id: 'refreshInterval',
-    name: 'refreshInterval',
-    value: settings.refreshInterval})
 }}
 
 

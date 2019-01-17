@@ -1,13 +1,26 @@
 <?php
+/**
+ * Craft Flowplayer Drive plugin for Craft CMS 3.x
+ *
+ * This plugin includes Flowplayer Drive into craftcms.
+ *
+ * @link      http://luke.nehemedia.de
+ * @copyright Copyright (c) 2018 Lucas Bares
+ */
+
 namespace lucasbares\craftflowplayerdrive\elements\db;
 
-use craft\db\Query;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
 use ns\prefix\elements\Product;
-use lucasbares\craftflowplayerdrive\elements\FlowplayerDriveVideoElement;
-use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 
+/**
+ * FlowplayerDriveVideoElementQuery
+ *
+ * @author    Lucas Bares
+ * @since     1.0.0
+ * @package lucasbares\craftflowplayerdrive\elements\db
+ */
 class FlowplayerDriveVideoElementQuery extends ElementQuery 
 {
 
@@ -83,15 +96,7 @@ class FlowplayerDriveVideoElementQuery extends ElementQuery
 
         // select the price column
         $this->query->select([
-            'craftflowplayerdrive.name',
-            'craftflowplayerdrive.video_id',
-            'craftflowplayerdrive.description',
-            'craftflowplayerdrive.published',
-            'craftflowplayerdrive.state',
-            'craftflowplayerdrive.published_at',
-            'craftflowplayerdrive.created_at',
-            'craftflowplayerdrive.thumbnail_url',
-
+            'craftflowplayerdrive.*'
         ]);
 
         if ($this->name) {

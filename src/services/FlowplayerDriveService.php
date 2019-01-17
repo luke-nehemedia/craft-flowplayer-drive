@@ -57,7 +57,7 @@ class FlowplayerDriveService extends Component
     // Public Methods
     // =========================================================================
 
-    public function __construct(){
+    public function init(){
 
         // Initiate client
         $this->client = new Client;
@@ -65,24 +65,18 @@ class FlowplayerDriveService extends Component
         // Store settings
         $this->settings = CraftFlowplayerDrive::$plugin->getSettings();
 
+        parent::init();
 
     }
 
-
-    // old
-    public function listVideos($page = 1){
-        $uri = 'https://api.flowplayer.com/ovp/web/video/v2/site/'.$this->settings->siteId.'.json?api_key='.$this->settings->apiKey.'&page='.$page;
-
-        $response = $this->client->get($uri);
-
-        if($response->getStatusCode() != '200'){
-            throw new Exception("Error getting Video list", $response->getStatusCode());
-            return false;
-        }else{
-            return json_decode($response->getBody())->videos;
-        }
-    }
-
+    /**
+     * Returns a list of all videos
+     *
+     * @param int $page
+     * @param int $page_size
+     * @return object
+     * @throws Exception
+     */
     public function getVideoList($page = 1, $page_size = 20){
         $uri = 'https://api.flowplayer.com/ovp/web/video/v2/site/'.$this->settings->siteId.'.json?api_key='.$this->settings->apiKey.'&page='.$page;
 
@@ -98,6 +92,14 @@ class FlowplayerDriveService extends Component
         }
     }
 
+    /**
+     * Returns a list of FlowplayerDriveVideoElements
+     *
+     * @param int $page
+     * @return array
+     * @throws Exception
+     * @deprecated
+     */
     public function listVideoElements($page = 1){
         $uri = 'https://api.flowplayer.com/ovp/web/video/v2/site/'.$this->settings->siteId.'.json?api_key='.$this->settings->apiKey.'&page_size=50&page='.$page;
 
@@ -118,23 +120,14 @@ class FlowplayerDriveService extends Component
         return $return;
     }
 
-
-    public function getVideosByIds($ids)
-    {
-        if($ids == null){
-            return [];
-        }
-
-        $return = [];
-
-        foreach($ids as $video){
-
-            $return[$video->id] = FlowplayerDriveVideoElement::createById($video->id);
-        }
-
-        return $return;
-    }
-
+    /**
+     * Returns the video details of a single video by its id
+     *
+     * @param string $id
+     * @return array
+     * @throws Exception
+     * @deprecated
+     */
     public function getVideoDetailById(string $id){
         $uri = 'https://api.flowplayer.com/ovp/web/video/v2/'.$id.'.json?api_key='.$this->settings->apiKey;
 
@@ -148,29 +141,16 @@ class FlowplayerDriveService extends Component
         }
     }
 
-    public function updateVideo($videoElement, $values){
-        $uri = 'https://api.flowplayer.com/ovp/web/video/v2/update.json';
-
-        $requestBody = [
-            'api_key'	=> 	$this->settings->apiKey,
-            'siteid'	=>	$this->settings->siteId,
-            'id'		=>	$videoElement->video_id
-        ];
-
-        foreach ($values as $key => $value) {
-            $requestBody[$key] = $value;
-        }
-
-        // send request
-        $request = new Request('POST', $uri, [], $requestBody);
-        $result = $this->client->send($request);
-
-
-        dd($result->getBody());
-
-    }
-
-    public function updateVideoElement($videoElement){
+    /**
+     * Updates a flowplayer drive video with the actual values of a FlowplayerDriveVideoElement
+     *
+     * It does NOT save the FlowplayerDriveVideoElement! This happens in the controller.
+     *
+     * @param $videoElement
+     * @return bool
+     * @throws \craft\errors\MissingComponentException
+     */
+    public function updateVideoElement(FlowplayerDriveVideoElement $videoElement){
         $uri = 'https://api.flowplayer.com/ovp/web/video/v2/update.json';
 
         $requestBody = [
@@ -199,28 +179,15 @@ class FlowplayerDriveService extends Component
 
     }
 
-
     /**
-     * This function can literally be anything you want, and you can have as many service
-     * functions as you want
+     * Deletes a video on flowplayer drive online
      *
-     * From any other plugin file, call it like this:
-     *
-     *     CraftFlowplayerDrive::$plugin->craftFlowplayerDriveService->exampleService()
-     *
-     * @return mixed
+     * @param FlowplayerDriveVideoElement $videoElement
+     * @return bool
+     * @throws Exception
+     * @throws \craft\errors\MissingComponentException
      */
-    public function exampleService()
-    {
-        $result = 'something';
-        // Check our Plugin's settings for `someAttribute`
-        if (CraftFlowplayerDrive::$plugin->getSettings()->someAttribute) {
-        }
-
-        return $result;
-    }
-
-    public function deleteVideoElement($videoElement)
+    public function deleteVideoElement(FlowplayerDriveVideoElement $videoElement):bool
     {
         $uri = 'https://api.flowplayer.com/ovp/web/video/delete/video.json';
 
@@ -241,13 +208,23 @@ class FlowplayerDriveService extends Component
         if($response->getStatusCode() != 200){
             Craft::$app->getSession()->setError('Error saving video details: '.$response->getReasonPhrase());
             throw new Exception('Error saving video details: '.$response->getReasonPhrase());
-            return false;
         }
 
         return true;
     }
 
-    public function createVideoElement(FlowplayerDriveVideoElement $videoElement,$videoUrl){
+    /**
+     * Creates a new video on flowplayer drive and updates the FlowplayerDriveVideoElement
+     * with the returned data (without saving it!).
+     *
+     * @param FlowplayerDriveVideoElement $videoElement
+     * @param string $videoUrl
+     * @return FlowplayerDriveVideoElement
+     * @throws Exception
+     * @throws \craft\errors\MissingComponentException
+     */
+    public function createVideoElement(FlowplayerDriveVideoElement $videoElement,string $videoUrl):FlowplayerDriveVideoElement
+    {
         $uri = 'https://api.flowplayer.com/ovp/web/video/v2/create.json';
 
         $requestBody = [
@@ -273,7 +250,6 @@ class FlowplayerDriveService extends Component
         if($response->getStatusCode() != 200){
             Craft::$app->getSession()->setError('Error saving video details: '.$response->getReasonPhrase());
             throw new Exception('Error saving video details: '.$response->getReasonPhrase());
-            return false;
         }
 
         // update local object

@@ -1,8 +1,18 @@
 <?php
+/**
+ * Craft Flowplayer Drive plugin for Craft CMS 3.x
+ *
+ * This plugin includes Flowplayer Drive into craftcms.
+ *
+ * @link      http://luke.nehemedia.de
+ * @copyright Copyright (c) 2018 Lucas Bares
+ */
+
 namespace lucasbares\craftflowplayerdrive\elements;
 
 use craft\base\Element;
 use Craft;
+use craft\helpers\DateTimeHelper;
 use craft\web\View;
 use lucasbares\craftflowplayerdrive\elements\db\FlowplayerDriveVideoElementQuery;
 use lucasbares\craftflowplayerdrive\elements\actions\DeleteVideo;
@@ -15,11 +25,15 @@ use Twig_Markup;
  *
  * A video that is hosted on flowplayer drive
  *
+ * @author    Lucas Bares
+ * @package   CraftFlowplayerDrive
+ * @since     1.0.0
  */
 class FlowplayerDriveVideoElement extends Element
 {
 
-    // Flowplayer-Drive Attributes
+    // Flowplayer Drive Attributees
+    // =========================================================================
     public $video_id = 0;
     public $adtag = '';
     public $categoryid = 0;
@@ -45,6 +59,9 @@ class FlowplayerDriveVideoElement extends Element
     public $userid = '';
     public $views = 0;
 
+
+    // Other Attributes
+    // =========================================================================
     /**
      * Editable attributes
      * 
@@ -108,7 +125,7 @@ class FlowplayerDriveVideoElement extends Element
     }
 
     /**
-     * This function is responsible for keeping your element table updated when elements are saved.
+     * This function is responsible for keeping the element table updated when elements are saved.
      *
      * @param bool $isNew whether it is a new or updated element
      * @throws \yii\db\Exception
@@ -229,147 +246,41 @@ class FlowplayerDriveVideoElement extends Element
         // idea: include pending depending on "state" or when using unpublish_date
     }
 
-    // Static Methods
-    // =========================================================================
-
-    /**
-     * @inheritdoc
-     */
-    public static function hasStatuses(): bool
+    public function datetimeAttributes(): array
     {
-        return true;
+        $attributes = ['created_at','updated_at', 'published_at'];
+        return array_merge($attributes, parent::datetimeAttributes());
     }
 
     /**
      * @inheritdoc
      */
-    public static function statuses(): array
-    {
-        return [
-            self::STATUS_ENABLED => Craft::t('craft-flowplayer-drive', 'Published'),
-            self::STATUS_DISABLED => Craft::t('craft-flowplayer-drive', 'Private')
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected static function defineSources(string $context = null): array
-    {
-        return [
-            [
-                'key' => '*',
-                'label' => Craft::t('craft-flowplayer-drive', 'All Videos'),
-                'criteria' => [],
-                'hasThumbs' => true,
-            ],
-            [
-                'key' => 'public',
-                'label' => Craft::t('craft-flowplayer-drive', 'Public Videos'),
-                'criteria' => [
-                    'published' => 1
-                ],
-                'hasThumbs' => true
-            ],
-            [
-                'key' => 'private',
-                'label' => Craft::t('craft-flowplayer-drive', 'Private Videos'),
-                'criteria' => [
-                    'published' => 'not 1'
-                ],
-                'hasThumbs' => true
-            ],
-        ];
-    }
-
-     /**
-     * @inheritdoc
-     */
-    protected static function defineActions(string $source = null): array
-    {
-        $actions = [];
-
-        $actions[] = DeleteVideo::class;
-
-        return $actions;
-
-    }
-
-    protected static function defineSortOptions(): array
-    {
-        return [
-            'name' => \Craft::t('craft-flowplayer-drive', 'Name'),
-            'created_at' => \Craft::t('craft-flowplayer-drive', 'Erstellungsdatum'),
-            'published_at' => \Craft::t('craft-flowplayer-drive', 'Veröffentlichungsdatum'),
-            'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum'),
-            'views' => \Craft::t('craft-flowplayer-drive', 'Views'),
-            'published' => \Craft::t('craft-flowplayer-drive', 'Veröffentlicht'),
-        ];
-    }
-
-    protected static function defineTableAttributes(): array
-    {
-        return [
-            'name' => \Craft::t('craft-flowplayer-drive', 'Name'),
-            'created_at' => \Craft::t('craft-flowplayer-drive', 'Erstellungsdatum'),
-            'published_at' => \Craft::t('craft-flowplayer-drive', 'Veröffentlichungsdatum'),
-            'published' => \Craft::t('craft-flowplayer-drive', 'Veröffentlicht'),
-            'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum'),
-            'likes' => \Craft::t('craft-flowplayer-drive', 'Likes'),
-            'dislikes' => \Craft::t('craft-flowplayer-drive', 'Dislikes'),
-            'video_id' => \Craft::t('craft-flowplayer-drive', 'Video-ID'),
-        ];
-    }
-
-    protected static function defineDefaultTableAttributes(string $source): array
-    {
-        return ['name', 'created_at','published','views'];
-    }
-
-    protected static function defineSearchableAttributes(): array
-    {
-        return ['name', 'description'];
-    }
-
-    // protected function tableAttributeHtml(string $attribute): string
-    // {
-    //     switch ($attribute) {
-    //         case 'published':
-    //             return var_export($attribute,1);
-    //             //return ($attribute == 1) ?  'ja' :  'nein';
-
-    //     }
-
-    //     return parent::tableAttributeHtml($attribute);
-    // }
-
-
-
-
-
-    public static function find(): ElementQueryInterface
-    {
-        return new FlowplayerDriveVideoElementQuery(static::class);
-    }
-
-
     public function getThumbUrl(int $size)
     {
         return $this->thumbnail_url;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getIsEditable(): bool
     {
         return true;
-        //return \Craft::$app->user->checkPermission('edit-product:'.$this->getType()->id);
     }
 
+    /**
+     * Return Html for the HUD-Editor
+     *
+     * @todo Exclude to template file
+     * @return string
+     * @throws \yii\base\Exception
+     */
     public function getEditorHtml(): string
     {
         // Name field
         $html = \Craft::$app->getView()->renderTemplateMacro('_includes/forms', 'textField', [
             [
-                'label' => \Craft::t('app', 'Name'),
+                'label' => \Craft::t('craft-flowplayer-drive', 'Name'),
                 'siteId' => $this->siteId,
                 'id' => 'name',
                 'name' => 'name',
@@ -384,7 +295,7 @@ class FlowplayerDriveVideoElement extends Element
         // Description field
         $html .= \Craft::$app->getView()->renderTemplateMacro('_includes/forms', 'textField', [
             [
-                'label' => \Craft::t('app', 'Description'),
+                'label' => \Craft::t('craft-flowplayer-drive', 'Description'),
                 'siteId' => $this->siteId,
                 'id' => 'description',
                 'name' => 'description',
@@ -400,7 +311,7 @@ class FlowplayerDriveVideoElement extends Element
         $html .= '<div class="field"><div class="heading"><label id="editor_'.$this->id.'-publish-label" for="published">Veröffentlicht</label></div><div class="input ltr">';
         $html .= \Craft::$app->getView()->renderTemplateMacro('_includes/forms', 'lightswitch', [
             [
-                'label' => \Craft::t('app', 'Veröffentlicht'),
+                'label' => \Craft::t('craft-flowplayer-drive', 'Published'),
                 'siteId' => $this->siteId,
                 'id' => 'published',
                 'name' => 'published',
@@ -452,8 +363,135 @@ class FlowplayerDriveVideoElement extends Element
         return (string)$this->id ?: static::class;
     }
 
+    // Static Methods
+    // =========================================================================
 
+    /**
+     * @inheritdoc
+     */
+    public static function hasStatuses(): bool
+    {
+        return true;
+    }
 
+    /**
+     * @inheritdoc
+     */
+    public static function find(): ElementQueryInterface
+    {
+        return new FlowplayerDriveVideoElementQuery(static::class);
+    }
 
+    /**
+     * @inheritdoc
+     */
+    public static function statuses(): array
+    {
+        return [
+            self::STATUS_ENABLED => Craft::t('craft-flowplayer-drive', 'Published State'),
+            self::STATUS_DISABLED => Craft::t('craft-flowplayer-drive', 'Private State')
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected static function defineSources(string $context = null): array
+    {
+        return [
+            [
+                'key' => '*',
+                'label' => Craft::t('craft-flowplayer-drive', 'All Videos'),
+                'criteria' => [],
+                'hasThumbs' => true,
+            ],
+            [
+                'key' => 'public',
+                'label' => Craft::t('craft-flowplayer-drive', 'Public Videos'),
+                'criteria' => [
+                    'published' => 1
+                ],
+                'hasThumbs' => true
+            ],
+            [
+                'key' => 'private',
+                'label' => Craft::t('craft-flowplayer-drive', 'Private Videos'),
+                'criteria' => [
+                    'published' => 'not 1'
+                ],
+                'hasThumbs' => true
+            ],
+        ];
+    }
+
+     /**
+     * @inheritdoc
+     */
+    protected static function defineActions(string $source = null): array
+    {
+        $actions = [];
+
+        $actions[] = DeleteVideo::class;
+
+        return $actions;
+
+    }
+
+    protected static function defineSortOptions(): array
+    {
+        return [
+            'name' => \Craft::t('craft-flowplayer-drive', 'Name'),
+            'created_at' => \Craft::t('craft-flowplayer-drive', 'Created at'),
+            'published_at' => \Craft::t('craft-flowplayer-drive', 'Published at'),
+            'updated_at' => \Craft::t('craft-flowplayer-drive', 'Updated at'),
+            'views' => \Craft::t('craft-flowplayer-drive', 'Views'),
+            'published' => \Craft::t('craft-flowplayer-drive', 'Published'),
+            'state' => \Craft::t('craft-flowplayer-drive', 'Status'),
+        ];
+    }
+
+    protected static function defineTableAttributes(): array
+    {
+        return [
+            'name' => \Craft::t('craft-flowplayer-drive', 'Name'),
+            'created_at' => \Craft::t('craft-flowplayer-drive', 'Created at'),
+            'published_at' => \Craft::t('craft-flowplayer-drive', 'Published at'),
+            'updated_at' => \Craft::t('craft-flowplayer-drive', 'Updated at'),
+            'views' => \Craft::t('craft-flowplayer-drive', 'Views'),
+            'published' => \Craft::t('craft-flowplayer-drive', 'Published'),
+            'video_id' => \Craft::t('craft-flowplayer-drive', 'Video-ID'),
+            'id' => \Craft::t('craft-flowplayer-drive', 'Entry-ID'),
+            'state' => \Craft::t('craft-flowplayer-drive', 'Status'),
+        ];
+    }
+
+    protected static function defineDefaultTableAttributes(string $source): array
+    {
+        return ['name', 'created_at','published'];
+    }
+
+    protected static function defineSearchableAttributes(): array
+    {
+        return ['name', 'description'];
+    }
+
+    // Protected Methods
+    // =========================================================================
+
+    /**
+     * Defines the Html-Output of the attributes, especially for published
+     *
+     * @param string $attribute
+     * @return string
+     */
+     protected function tableAttributeHtml(string $attribute): string
+     {
+         switch ($attribute) {
+             case 'published':
+                return $this->statuses()[$this->getStatus()];
+         }
+
+         return parent::tableAttributeHtml($attribute);
+     }
 
 }
