@@ -248,7 +248,7 @@ class FlowplayerDriveVideoElement extends Element
 
     public function datetimeAttributes(): array
     {
-        $attributes = ['created_at','updated_at', 'published_at'];
+        $attributes = ['created_at','updated_at', 'published_at','unpublished_at'];
         return array_merge($attributes, parent::datetimeAttributes());
     }
 
@@ -467,7 +467,7 @@ class FlowplayerDriveVideoElement extends Element
 
     protected static function defineDefaultTableAttributes(string $source): array
     {
-        return ['name', 'created_at','published'];
+        return ['name', 'created_at','views'];
     }
 
     protected static function defineSearchableAttributes(): array
