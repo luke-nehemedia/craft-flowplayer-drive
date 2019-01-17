@@ -10,10 +10,10 @@
 
 namespace lucasbares\craftflowplayerdrive;
 
+use lucasbares\craftflowplayerdrive\fields\FlowplayerVideoField;
 use lucasbares\craftflowplayerdrive\services\FlowplayerDriveService;
-use lucasbares\craftflowplayerdrive\variables\CraftFlowplayerDriveVariable;
+use lucasbares\craftflowplayerdrive\variables\FlowplayerDriveVariable;
 use lucasbares\craftflowplayerdrive\models\Settings;
-use lucasbares\craftflowplayerdrive\fields\VideoField as VideoFieldField;
 use Craft;
 use craft\base\Plugin;
 use craft\services\Plugins;
@@ -103,7 +103,7 @@ class CraftFlowplayerDrive extends Plugin
             Fields::class,
             Fields::EVENT_REGISTER_FIELD_TYPES,
             function (RegisterComponentTypesEvent $event) {
-                $event->types[] = VideoFieldField::class;
+                $event->types[] = FlowplayerVideoField::class;
             }
         );
 
@@ -114,7 +114,7 @@ class CraftFlowplayerDrive extends Plugin
             function (Event $event) {
                 /** @var CraftVariable $variable */
                 $variable = $event->sender;
-                $variable->set('craftFlowplayerDrive', CraftFlowplayerDriveVariable::class);
+                $variable->set('craftFlowplayerDrive', FlowplayerDriveVariable::class);
             }
         );
 

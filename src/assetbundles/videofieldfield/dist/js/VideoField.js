@@ -1,7 +1,7 @@
 /**
  * Craft Flowplayer Drive plugin for Craft CMS
  *
- * VideoField Field JS
+ * FlowplayerVideoField Field JS
  *
  * @author    Lucas Bares
  * @copyright Copyright (c) 2018 Lucas Bares

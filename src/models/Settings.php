@@ -55,6 +55,14 @@ class Settings extends Model
      */
     public $userId = 'abc000de-0000-0a0b-00ab-abc0d000000';
 
+
+    /**
+     * Default Player ID - To display the player on site
+     *
+     * @var string
+     */
+    public $defaultPlayerId = 'abc000de-0000-0a0b-00ab-abc0d000000';
+
     /**
      * Refresh-Interval
      *

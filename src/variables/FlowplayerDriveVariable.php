@@ -13,6 +13,8 @@ namespace lucasbares\craftflowplayerdrive\variables;
 use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 
 use Craft;
+use Twig_Markup;
+use craft\web\View;
 
 /**
  * Craft Flowplayer Drive Variable
@@ -26,7 +28,7 @@ use Craft;
  * @package   CraftFlowplayerDrive
  * @since     1.0.0
  */
-class CraftFlowplayerDriveVariable
+class FlowplayerDriveVariable
 {
     // Public Methods
     // =========================================================================
@@ -52,5 +54,17 @@ class CraftFlowplayerDriveVariable
             $result = "I'm feeling optional today...";
         }
         return $result;
+    }
+
+    public function getPlayer($entry){
+        $settings = Craft::$app->getPlugins()->getPlugin('craft-flowplayer-drive')->getSettings();
+
+        // Render template
+        $oldMode = \Craft::$app->view->getTemplateMode();
+        \Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+        $html = \Craft::$app->view->renderTemplate('craft-flowplayer-drive/_components/fields/VideoField_render', ['settings' => $settings, 'video' => $entry]);
+        \Craft::$app->view->setTemplateMode($oldMode);
+
+        return new Twig_Markup($html,Craft::$app->getView()->getTwig()->getCharset());
     }
 }
