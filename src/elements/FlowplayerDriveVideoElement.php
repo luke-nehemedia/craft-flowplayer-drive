@@ -6,11 +6,16 @@ use Craft;
 use craft\web\View;
 use lucasbares\craftflowplayerdrive\elements\db\FlowplayerDriveVideoElementQuery;
 use lucasbares\craftflowplayerdrive\elements\actions\DeleteVideo;
-use lucasbares\craftflowplayerdrive\services\FlowplayerDriveService;
 use craft\elements\db\ElementQueryInterface;
 use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
 use Twig_Markup;
 
+/**
+ * Flowplayer Drive Video Element
+ *
+ * A video that is hosted on flowplayer drive
+ *
+ */
 class FlowplayerDriveVideoElement extends Element
 {
 
@@ -49,7 +54,7 @@ class FlowplayerDriveVideoElement extends Element
     public $editable = [ 'name', 'description', 'published'];
 
     /**
-     * Attributes obtained by API
+     * Attributes obtained by API, not editable so far
      * 
      * @var array
      * @access protected
@@ -80,7 +85,7 @@ class FlowplayerDriveVideoElement extends Element
     /**
      * Updates the element via API before saving it to the local database
      *
-     * @param boolean $isNew whether it is a new or updated element
+     * @param bool $isNew whether it is a new or updated element
      * @return bool
      */
     public function beforeSave(bool $isNew): bool
@@ -93,7 +98,7 @@ class FlowplayerDriveVideoElement extends Element
         }else{
             $this->published = false;
         }
-        
+
         // Save existing items to API
         if(!$isNew){
             return $this->service->updateVideoElement($this);
@@ -103,10 +108,10 @@ class FlowplayerDriveVideoElement extends Element
     }
 
     /**
-     * This function is responsible for keeping your element table updated when elements are saved. 
-     * The afterSave() method is a part of the standard element saving control flow.
+     * This function is responsible for keeping your element table updated when elements are saved.
      *
-     * @param boolean $isNew whether it is a new or updated element
+     * @param bool $isNew whether it is a new or updated element
+     * @throws \yii\db\Exception
      */
     public function afterSave(bool $isNew)
     {
@@ -119,7 +124,6 @@ class FlowplayerDriveVideoElement extends Element
                     'description' => $this->description,
                     'published' => $this->published,
                     'views' => $this->views,
-
                     'adtag' => $this->adtag,
                     'categoryid' =>  $this->categoryid,
                     'created_at' => $this->created_at,
@@ -176,8 +180,8 @@ class FlowplayerDriveVideoElement extends Element
     /**
      * Fill model with data obtained by the API
      *
-     * @param stdObject $videoInfo json object with information obtained by the API-call
-     * @return void
+     * @param object $videoInfo json object with information obtained by the API-call
+     * @return FlowplayerDriveVideoElement
      */
     public function fillFromAPI($videoInfo){
         
@@ -193,30 +197,40 @@ class FlowplayerDriveVideoElement extends Element
 
         $this->thumbnail_url = $videoInfo->images->thumbnail_url;
         $this->normal_image_url = $videoInfo->images->normal_image_url;
+
+        return $this;
+    }
+
+
+    /**
+     * Helper function to check, whether a video is public or private
+     *
+     * @return bool
+     */
+    public function isPublished(){
+        if($this->published == 1 or $this->published == true or $this->published == '1'){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     /**
-     * Update the model with information obtained from the API
-     *
-     * @param stdObject $videoInfo json object with information obtained by the API-call
-     * @return void
+     * @inheritdoc
      */
-    public function updateFromAPI($videoInfo){
-        foreach ($this->obtainable as $key) {
-            $this->$key = $videoInfo->$key;
+    public function getStatus()
+    {
+        if($this->isPublished()){
+            return self::STATUS_ENABLED;
+        }else{
+            return self::STATUS_DISABLED;
         }
 
-        $this->thumbnail_url = $videoInfo->images->thumbnail_url;
-        $this->normal_image_url = $videoInfo->images->normal_image_url;
-
-        foreach ($this->editable as $key) {
-            $this->$key = $videoInfo->$key;;
-        }
-
-        Craft::$app->elements->saveElement($this);
-
+        // idea: include pending depending on "state" or when using unpublish_date
     }
 
+    // Static Methods
+    // =========================================================================
 
     /**
      * @inheritdoc
@@ -232,49 +246,26 @@ class FlowplayerDriveVideoElement extends Element
     public static function statuses(): array
     {
         return [
-            self::STATUS_ENABLED => Craft::t('app', 'Published'),
-            self::STATUS_DISABLED => Craft::t('app', 'Unpublished')
+            self::STATUS_ENABLED => Craft::t('craft-flowplayer-drive', 'Published'),
+            self::STATUS_DISABLED => Craft::t('craft-flowplayer-drive', 'Private')
         ];
-
-        
     }
-
-    public function isPublished(){
-        if($this->published == 1 or $this->published == true or $this->published == '1'){
-            return true;
-        }else{
-            return false;
-        }
-    }
-
 
     /**
      * @inheritdoc
      */
-    public function getStatus()
-    {
-        if($this->isPublished()){
-            return self::STATUS_ENABLED;
-        }else{
-            return self::STATUS_DISABLED;
-        }
-        
-        // idea: include pending depending on "state" or when using unpublish_date
-    }
-
-    
     protected static function defineSources(string $context = null): array
     {
         return [
             [
                 'key' => '*',
-                'label' => 'Alle Videos',
+                'label' => Craft::t('craft-flowplayer-drive', 'All Videos'),
                 'criteria' => [],
                 'hasThumbs' => true,
             ],
             [
                 'key' => 'public',
-                'label' => 'Öffentlich',
+                'label' => Craft::t('craft-flowplayer-drive', 'Public Videos'),
                 'criteria' => [
                     'published' => 1
                 ],
@@ -282,7 +273,7 @@ class FlowplayerDriveVideoElement extends Element
             ],
             [
                 'key' => 'private',
-                'label' => 'Privat',
+                'label' => Craft::t('craft-flowplayer-drive', 'Private Videos'),
                 'criteria' => [
                     'published' => 'not 1'
                 ],

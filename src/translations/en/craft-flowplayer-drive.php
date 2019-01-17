@@ -22,4 +22,24 @@
  */
 return [
     'Craft Flowplayer Drive plugin loaded' => 'Craft Flowplayer Drive plugin loaded',
+
+
+
+
+    // CP Labels
+    'Flowplayer Drive' => 'Flowplayer Drive',
+    'Video List'  => 'Video list',
+    'New Video'   => 'New Video',
+
+    // Field
+    'FlowplayerVideoField' => 'Flowplayer Drive Video',
+
+    // Sources
+    'All Videos'    => 'All Videos',
+    'Public Videos'    => 'Public Videos',
+    'Private Videos'    => 'Private Videos',
+
+    // Statuses
+    'Published'         =>  'Published',
+    'Private'       =>  'Private',
 ];

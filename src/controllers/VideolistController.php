@@ -41,7 +41,8 @@ class VideolistController extends Controller
 			
 			// If already in Database, update with API-Data
 			if($result->count() > 0){
-				$result->one()->updateFromAPI($video);
+				$result->one()->fillFromAPI($video);
+                Craft::$app->elements->saveElement($video);
 				$updated++;
 			// If new, create new
 			}else{

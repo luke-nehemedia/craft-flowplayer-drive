@@ -11,26 +11,14 @@
 namespace lucasbares\craftflowplayerdrive\fields;
 
 use craft\fields\BaseRelationField;
-use craft\helpers\ElementHelper;
-use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
-use lucasbares\craftflowplayerdrive\assetbundles\videofieldfield\VideoFieldFieldAsset;
 use lucasbares\craftflowplayerdrive\elements\FlowplayerDriveVideoElement;
 
 use Craft;
 use craft\base\ElementInterface;
-use craft\base\Field;
-use yii\db\Schema;
-use craft\helpers\Json;
 
 
 /**
  * FlowplayerVideoField Field
- *
- * Whenever someone creates a new field in Craft, they must specify what
- * type of field it is. The system comes with a handful of field types baked in,
- * and we’ve made it extremely easy for plugins to add new ones.
- *
- * https://craftcms.com/docs/plugins/field-types
  *
  * @author    Lucas Bares
  * @package   CraftFlowplayerDrive
@@ -90,11 +78,6 @@ class FlowplayerVideoField extends BaseRelationField
     /**
      * Returns the validation rules for attributes.
      *
-     * Validation rules are used by [[validate()]] to check if attribute values are valid.
-     * Child classes may override this method to declare different validation rules.
-     *
-     * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
-     *
      * @return array
      */
     public function rules()
@@ -110,21 +93,6 @@ class FlowplayerVideoField extends BaseRelationField
     }
 
     /**
-     * Modifies an element query.
-     *
-     * This method will be called whenever elements are being searched for that may have this field assigned to them.
-     *
-     * If the method returns `false`, the query will be stopped before it ever gets a chance to execute.
-     *
-     * @param mixed $value The value that was set on this field’s corresponding [[ElementCriteriaModel]] param, if any.
-     * @return null|false `false` in the event that the method is sure that no elements are going to be found.
-     */
-    public function serializeValue($value, ElementInterface $element = null)
-    {
-        return parent::serializeValue($value, $element);
-    }
-
-    /**
      * Returns the component’s settings HTML.
      *
      * @return string|null
@@ -133,7 +101,6 @@ class FlowplayerVideoField extends BaseRelationField
      */
     public function getSettingsHtml()
     {
-
         // Render the settings template
         return Craft::$app->getView()->renderTemplate(
             'craft-flowplayer-drive/_components/fields/VideoField_settings',
@@ -145,12 +112,17 @@ class FlowplayerVideoField extends BaseRelationField
 
     /**
      * @inheritdoc
+     *
+     * @todo Add some descriptions
      */
     public function getInputHtml($value, ElementInterface $element = null): string
     {
         // Just let the parent do its work
         return parent::getInputHtml($value, $element);
     }
+
+    // Protected Methods
+    // =========================================================================
 
     /**
      * @inheritdoc
@@ -165,7 +137,7 @@ class FlowplayerVideoField extends BaseRelationField
             $variables['criteria'] = ['published' => 1];
             $variables['sources'] = [
                 'key' => '*',
-                'label' => 'Alle Videos',
+                'label' => Craft::t('craft-flowplayer-drive', 'All Videos'),
                 'criteria' => [],
                 'hasThumbs' => true,
             ];

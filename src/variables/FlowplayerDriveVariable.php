@@ -10,8 +10,6 @@
 
 namespace lucasbares\craftflowplayerdrive\variables;
 
-use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
-
 use Craft;
 use Twig_Markup;
 use craft\web\View;
