@@ -3,11 +3,13 @@ namespace lucasbares\craftflowplayerdrive\elements;
 
 use craft\base\Element;
 use Craft;
+use craft\web\View;
 use lucasbares\craftflowplayerdrive\elements\db\FlowplayerDriveVideoElementQuery;
 use lucasbares\craftflowplayerdrive\elements\actions\DeleteVideo;
 use lucasbares\craftflowplayerdrive\services\FlowplayerDriveService;
 use craft\elements\db\ElementQueryInterface;
 use lucasbares\craftflowplayerdrive\CraftFlowplayerDrive;
+use Twig_Markup;
 
 class FlowplayerDriveVideoElement extends Element
 {
@@ -404,8 +406,7 @@ class FlowplayerDriveVideoElement extends Element
         ]);
 
         // Published
-        $html .= '<div class="field"><div class="heading">
-                            <label id="editor_'.$this->id.'-publish-label" for="published">Veröffentlicht</label></div><div class="input ltr">';
+        $html .= '<div class="field"><div class="heading"><label id="editor_'.$this->id.'-publish-label" for="published">Veröffentlicht</label></div><div class="input ltr">';
         $html .= \Craft::$app->getView()->renderTemplateMacro('_includes/forms', 'lightswitch', [
             [
                 'label' => \Craft::t('app', 'Veröffentlicht'),
@@ -426,6 +427,25 @@ class FlowplayerDriveVideoElement extends Element
         $html .= parent::getEditorHtml();
 
         return $html;
+    }
+
+    /**
+     * Returns html code for the flowplayer with the defaultPlayerId
+     *
+     * @return Twig_Markup
+     * @throws \Twig_Error_Loader
+     * @throws \yii\base\Exception
+     */
+    public function getPlayerHTML(){
+        $settings = CraftFlowplayerDrive::getInstance()->getSettings();
+
+        // Render template
+        $oldMode = \Craft::$app->view->getTemplateMode();
+        Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_CP);
+        $html = Craft::$app->view->renderTemplate('craft-flowplayer-drive/_components/fields/VideoField_render', ['settings' => $settings, 'video' => $this]);
+        Craft::$app->view->setTemplateMode($oldMode);
+
+        return new Twig_Markup($html,Craft::$app->getView()->getTwig()->getCharset());
     }
 
     /**
