@@ -262,32 +262,32 @@ class FlowplayerDriveVideoElement extends Element
 
     
     protected static function defineSources(string $context = null): array
-	{
-	    return [
-	        [
-	            'key' => '*',
-	            'label' => 'Alle Videos',
-	            'criteria' => [],
+    {
+        return [
+            [
+                'key' => '*',
+                'label' => 'Alle Videos',
+                'criteria' => [],
                 'hasThumbs' => true,
-	        ],
-	        [
-	            'key' => 'public',
-	            'label' => 'Öffentlich',
-	            'criteria' => [
-	                'published' => 1
-	            ],
+            ],
+            [
+                'key' => 'public',
+                'label' => 'Öffentlich',
+                'criteria' => [
+                    'published' => 1
+                ],
                 'hasThumbs' => true
-	        ],
-	        [
-	            'key' => 'private',
-	            'label' => 'Privat',
-	            'criteria' => [
-	                'published' => 'not 1'
-	            ],
+            ],
+            [
+                'key' => 'private',
+                'label' => 'Privat',
+                'criteria' => [
+                    'published' => 'not 1'
+                ],
                 'hasThumbs' => true
-	        ],
-	    ];
-	}
+            ],
+        ];
+    }
 
      /**
      * @inheritdoc
@@ -302,41 +302,41 @@ class FlowplayerDriveVideoElement extends Element
 
     }
 
-	protected static function defineSortOptions(): array
-	{
-	    return [
-	        'name' => \Craft::t('craft-flowplayer-drive', 'Name'),
-	        'created_at' => \Craft::t('craft-flowplayer-drive', 'Erstellungsdatum'),
-	        'published_at' => \Craft::t('craft-flowplayer-drive', 'Veröffentlichungsdatum'),
-	        'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum'),
+    protected static function defineSortOptions(): array
+    {
+        return [
+            'name' => \Craft::t('craft-flowplayer-drive', 'Name'),
+            'created_at' => \Craft::t('craft-flowplayer-drive', 'Erstellungsdatum'),
+            'published_at' => \Craft::t('craft-flowplayer-drive', 'Veröffentlichungsdatum'),
+            'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum'),
             'views' => \Craft::t('craft-flowplayer-drive', 'Views'),
             'published' => \Craft::t('craft-flowplayer-drive', 'Veröffentlicht'),
-	    ];
-	}
+        ];
+    }
 
-	protected static function defineTableAttributes(): array
-	{
-	    return [
-	        'name' => \Craft::t('craft-flowplayer-drive', 'Name'),
-	        'created_at' => \Craft::t('craft-flowplayer-drive', 'Erstellungsdatum'),
-	        'published_at' => \Craft::t('craft-flowplayer-drive', 'Veröffentlichungsdatum'),
+    protected static function defineTableAttributes(): array
+    {
+        return [
+            'name' => \Craft::t('craft-flowplayer-drive', 'Name'),
+            'created_at' => \Craft::t('craft-flowplayer-drive', 'Erstellungsdatum'),
+            'published_at' => \Craft::t('craft-flowplayer-drive', 'Veröffentlichungsdatum'),
             'published' => \Craft::t('craft-flowplayer-drive', 'Veröffentlicht'),
-	        'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum'),
+            'updated_at' => \Craft::t('craft-flowplayer-drive', 'Änderungsdatum'),
             'likes' => \Craft::t('craft-flowplayer-drive', 'Likes'),
             'dislikes' => \Craft::t('craft-flowplayer-drive', 'Dislikes'),
             'video_id' => \Craft::t('craft-flowplayer-drive', 'Video-ID'),
-	    ];
-	}
+        ];
+    }
 
-	protected static function defineDefaultTableAttributes(string $source): array
-	{
-	    return ['name', 'created_at','published','views'];
-	}
+    protected static function defineDefaultTableAttributes(string $source): array
+    {
+        return ['name', 'created_at','published','views'];
+    }
 
-	protected static function defineSearchableAttributes(): array
-	{
-   		return ['name', 'description'];
-	}
+    protected static function defineSearchableAttributes(): array
+    {
+        return ['name', 'description'];
+    }
 
     // protected function tableAttributeHtml(string $attribute): string
     // {
@@ -354,7 +354,7 @@ class FlowplayerDriveVideoElement extends Element
 
 
 
-	public static function find(): ElementQueryInterface
+    public static function find(): ElementQueryInterface
     {
         return new FlowplayerDriveVideoElementQuery(static::class);
     }
