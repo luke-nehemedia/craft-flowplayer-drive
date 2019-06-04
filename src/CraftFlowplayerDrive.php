@@ -30,7 +30,7 @@ use craft\events\RegisterUrlRulesEvent;
  *
  * @author    Lucas Bares
  * @package   CraftFlowplayerDrive
- * @since     1.0.0
+ * @since     0.0.1
  *
  * @property  FlowplayerDriveService $flowplayerDriveService
  * @property  Settings $settings
